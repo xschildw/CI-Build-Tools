@@ -1,2 +1,2 @@
 # Gist
-collection of gist
+Collection of Gists
