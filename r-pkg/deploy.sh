@@ -2,6 +2,13 @@
 # ${GITHUB_ACCOUNT} 'ran' repository.  Users can then install the packages using the commmand:
 # install.packages(<package-name>, repos="https://${GITHUB_ACCOUNT}.github.io/${REPO_NAME}")
 
+# Params
+# USERNAME -- Github user who is running this build
+# GITHUB_TOKEN -- The Github token that grants access to GITHUB_ACCOUNT for USERNAME
+# USER_EMAIL -- The email of the USERNAME above
+# GITHUB_ACCOUNT -- The target Github account
+# REPO_NAME -- The target RAN repository 
+
 ## unpack the artifact
 rm -rf unpacked
 mkdir unpacked

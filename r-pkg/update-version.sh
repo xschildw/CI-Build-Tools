@@ -1,4 +1,13 @@
-# This script, when run from Jenkins, pulls from a github branch, updates the package version and date, then pushes back the changes.
+# This script is used for synapser_staging_deploy and synapser_prod_deploy. 
+# It checkout REPO_NAME repository, changes the version, and push the changes back to the repository.
+
+# Params
+# USERNAME -- Github user who is running this build
+# GITHUB_TOKEN -- The Github token that grants access to GITHUB_ACCOUNT for USERNAME
+# USER_EMAIL -- The email of the USERNAME above
+# GITHUB_ACCOUNT -- The target Github account
+# REPO_NAME -- The repository to update
+# BRANCH -- The branch to push update to
 
 # remove the last build clone
 set +e
