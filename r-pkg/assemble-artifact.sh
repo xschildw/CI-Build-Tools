@@ -24,7 +24,7 @@ do
       then
       	export VERSION=$file_version
       else
-      	if [${VERSION} != $file_version]
+      	if [ "$VERSION" != "$file_version" ]
         then
           echo "artifacts have different version"
           exit 1
