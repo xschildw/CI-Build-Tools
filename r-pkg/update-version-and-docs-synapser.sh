@@ -53,10 +53,18 @@ rm man/synapser-package.Rd
 mv man/synapser-package.Rd2.temp man/synapser-package.Rd
 rm man/synapser-package.Rd.temp
 
-R -e ".libPaths();\
-Sys.getenv('R_LIBS_USER');\
-install.packages('pkgdown', Sys.getenv('R_LIBS_USER'), repos=c('http://cran.fhcrc.org'));\
+# add a directory that we can write to
+set +e
+rm -rf ../RLIB
+set -e
+mkdir -p ../RLIB
+
+R -e ".libPaths('../RLIB');\
+install.packages('pkgdown', '../RLIB', repos=c('http://cran.fhcrc.org'));\
 pkgdown::build_site()"
+
+## clean up the temporary R library dir
+rm -rf ../RLIB
 
 git add --all
 git commit -m "Version $VERSION is succesfully built on $DATE"
