@@ -1,6 +1,5 @@
 # This script is used for synapser_staging_deploy and synapser_prod_deploy. 
 # It checkout REPO_NAME repository, changes the version, update the docs, and push the changes back to the repository.
-# Notes: this script requires `pkgdown` package is available on the build machine.
 
 # Params
 # USERNAME -- Github user who is running this build
@@ -54,7 +53,10 @@ rm man/synapser-package.Rd
 mv man/synapser-package.Rd2.temp man/synapser-package.Rd
 rm man/synapser-package.Rd.temp
 
-R -e "pkgdown::build_site()"
+R -e ".libPaths();\
+Sys.getenv('R_LIBS_USER');\
+install.packages('pkgdown', repos=c('http://cran.fhcrc.org'));\
+pkgdown::build_site()"
 
 git add --all
 git commit -m "Version $VERSION is succesfully built on $DATE"
