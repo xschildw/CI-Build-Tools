@@ -55,7 +55,7 @@ rm man/synapser-package.Rd.temp
 
 R -e ".libPaths();\
 Sys.getenv('R_LIBS_USER');\
-install.packages('pkgdown', repos=c('http://cran.fhcrc.org'));\
+install.packages('pkgdown', Sys.getenv('R_LIBS_USER'), repos=c('http://cran.fhcrc.org'));\
 pkgdown::build_site()"
 
 git add --all
