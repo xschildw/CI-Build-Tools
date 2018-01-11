@@ -60,7 +60,7 @@ set -e
 mkdir -p ../RLIB
 
 R -e ".libPaths('../RLIB');\
-install.packages('pkgdown', repos=c('http://cran.fhcrc.org'));\
+devtools::install_github('hadley/pkgdown');\
 pkgdown::build_site()"
 
 ## clean up the temporary R library dir
