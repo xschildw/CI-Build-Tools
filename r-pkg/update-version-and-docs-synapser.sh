@@ -8,6 +8,7 @@
 # GITHUB_ACCOUNT -- The target Github account
 # REPO_NAME -- The repository to update
 # BRANCH -- The branch to push update to
+# USE_STAGING_RAN -- Set to True to download dependency (PythonEmbedInR) from staging RAN
 
 # remove the last build clone
 set +e
