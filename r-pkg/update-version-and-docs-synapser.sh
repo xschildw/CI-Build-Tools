@@ -60,13 +60,6 @@ rm -rf ../RLIB
 set -e
 mkdir -p ../RLIB
 
-# need to build the package to be able to build docs
-## build the package, including the vignettes
-R CMD build ./
-
-## now install it, creating the deployable archive as a side effect
-R CMD INSTALL ./ --library=../RLIB
-
 if [ ${USE_STAGING_RAN} ]
 then
 	RAN=https://sage-bionetworks.github.io/staging-ran
@@ -77,8 +70,16 @@ fi
 R -e ".libPaths('../RLIB');\
 devtools::install_github('hadley/pkgdown');\
 install.packages(c('pack', 'R6', 'testthat', 'knitr', 'rmarkdown', 'PythonEmbedInR'),\
- repos=c('http://cran.fhcrc.org', '${RAN}'));\
-pkgdown::build_site()"
+ repos=c('http://cran.fhcrc.org', '${RAN}'))"
+
+# need to build the package to be able to build docs
+## build the package, including the vignettes
+R CMD build ./
+
+## now install it, creating the deployable archive as a side effect
+R CMD INSTALL ./ --library=../RLIB
+
+R -e "pkgdown::build_site()"
 
 ## clean up the temporary R library dir
 rm -rf ../RLIB
