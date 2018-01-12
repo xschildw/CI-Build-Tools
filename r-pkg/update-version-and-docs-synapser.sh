@@ -59,8 +59,17 @@ rm -rf ../RLIB
 set -e
 mkdir -p ../RLIB
 
+if [ ${USE_STAGING_RAN} ]
+then
+	RAN=https://sage-bionetworks.github.io/staging-ran
+else
+	RAN=https://sage-bionetworks.github.io/ran
+fi
+
 R -e ".libPaths('../RLIB');\
 devtools::install_github('hadley/pkgdown');\
+install.packages(c('pack', 'R6', 'testthat', 'knitr', 'rmarkdown', 'PythonEmbedInR'),\
+ repos=c('https://cran.fhcrc.org', '${RAN}'));\
 pkgdown::build_site()"
 
 ## clean up the temporary R library dir
