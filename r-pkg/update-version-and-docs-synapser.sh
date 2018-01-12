@@ -71,7 +71,7 @@ R -e ".libPaths('../RLIB');\
 devtools::install_github('hadley/pkgdown');\
 install.packages(c('pack', 'R6', 'testthat', 'knitr', 'rmarkdown', 'PythonEmbedInR'),\
  repos=c('http://cran.fhcrc.org', '${RAN}'));\
-pkgdown::build_site()"
+pkgdown::build_site(examples = FALSE)"
 
 ## clean up the temporary R library dir
 rm -rf ../RLIB
