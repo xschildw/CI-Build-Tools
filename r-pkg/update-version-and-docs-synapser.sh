@@ -78,7 +78,8 @@ R CMD build ./ --no-build-vignettes
 ## now install it, creating the deployable archive as a side effect
 R CMD INSTALL ./ --library=../RLIB
 
-R -e "devtools::install_github('hadley/pkgdown');\
+R -e "libPaths('../RLIB');\
+devtools::install_github('hadley/pkgdown');\
 pkgdown::build_site()"
 
 ## clean up the temporary R library dir
