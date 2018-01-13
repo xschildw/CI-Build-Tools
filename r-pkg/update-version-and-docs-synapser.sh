@@ -74,7 +74,7 @@ install.packages(c('pack', 'R6', 'testthat', 'knitr', 'rmarkdown', 'PythonEmbedI
 
 # need to build the package to be able to build docs
 ## build the package, including the vignettes
-R CMD build ./
+R CMD build ./ --no-build-vignettes
 
 ## now install it, creating the deployable archive as a side effect
 R CMD INSTALL ./ --library=../RLIB
