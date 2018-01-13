@@ -68,7 +68,6 @@ else
 fi
 
 R -e ".libPaths('../RLIB');\
-devtools::install_github('hadley/pkgdown');\
 install.packages(c('pack', 'R6', 'testthat', 'knitr', 'rmarkdown', 'PythonEmbedInR'),\
  repos=c('http://cran.fhcrc.org', '${RAN}'))"
 
@@ -79,7 +78,8 @@ R CMD build ./ --no-build-vignettes
 ## now install it, creating the deployable archive as a side effect
 R CMD INSTALL ./ --library=../RLIB
 
-R -e "pkgdown::build_site()"
+R -e "devtools::install_github('hadley/pkgdown');\
+pkgdown::build_site()"
 
 ## clean up the temporary R library dir
 rm -rf ../RLIB
