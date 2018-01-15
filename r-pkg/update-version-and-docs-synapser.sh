@@ -1,4 +1,4 @@
-# This script is used for synapser_staging_deploy and synapser_prod_deploy. 
+# This script is used for synapser_staging_artifact. 
 # It checkout REPO_NAME repository, changes the version, update the docs, and push the changes back to the repository.
 
 # Params
