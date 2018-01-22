@@ -57,7 +57,9 @@ fi
 }
 
 clean_up_volumes() {
+  set +e
   docker volume prune -f
+  set -e
 }
 
 # the containers are ${JOB_NAME}-rds and ${JOB_NAME}-plfm
