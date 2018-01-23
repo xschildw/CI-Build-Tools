@@ -86,15 +86,15 @@ echo "creating .m2 folder ..."
 mkdir -p ${m2_cache_parent_folder}/.m2/
 
 if [ $label = windows-aws-containers ]; then
-	echo "creating l2bridge network ..."
+	echo "creating l2bridge network: ${network_name} ..."
 	docker network create --driver l2bridge ${network_name}
 else
-	echo "creating bridge network ..."
+	echo "creating bridge network: ${network_name} ..."
 	docker network create --driver bridge ${network_name}
 fi
 
 # start up rds container
-echo "starting up rds container ..."
+echo "starting up rds container: ${rds_container_name}..."
 docker run --name ${rds_container_name} \
 --network=${network_name} \
 -m 1500M \
@@ -115,7 +115,7 @@ docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "GRANT ALL ON
 cd integration-test
 
 # create plfm container and run `mvn cargo:run`
-echo "creating plfm container ..."
+echo "creating plfm container: ${plfm_container_name} ..."
 docker run -i --rm --name ${plfm_container_name} \
 -m 5500M \
 --network=${network_name} \
