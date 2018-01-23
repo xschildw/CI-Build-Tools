@@ -45,6 +45,7 @@ rds_user_name=${stack}${user}
 
 clean_up_container() {
 	if [ $(docker ps --format {{.Names}} -af name=$1) ]; then
+		echo "cleaning up containers ..."
 		docker stop $1
 		docker rm $1
 	fi
@@ -52,12 +53,14 @@ clean_up_container() {
 
 clean_up_network() {
 	if [ $(docker network ls | grep -q $1 && echo $?) ]; then
+		echo "cleaning up network ..."
 		docker network rm $1
 	fi
 }
 
 clean_up_volumes() {
 	if [ $label = windows-aws-containers ]; then
+		echo "cleaning up volumes ..."
 		docker volume prune -f
 	fi
 }
@@ -76,16 +79,19 @@ clean_up_network ${network_name}
 
 clean_up_volumes
 
+echo "creating .m2 folder ..."
 mkdir -p ${m2_cache_parent_folder}/.m2/
 
-if [ $label = windows-aws-containers ]
-then
+if [ $label = windows-aws-containers ]; then
+	echo "creating l2bridge network ..."
 	docker network create --driver l2bridge ${network_name}
 elif
+	echo "creating bridge network ..."
 	docker network create --driver bridge ${network_name}
 fi
 
 # start up rds container
+echo "starting up rds container ..."
 docker run --name ${rds_container_name} \
 --network=${network_name} \
 -m 1500M \
@@ -106,6 +112,7 @@ docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "GRANT ALL ON
 cd integration-test
 
 # create plfm container and run `mvn cargo:run`
+echo "creating plfm container ..."
 docker run -i --rm --name ${plfm_container_name} \
 -m 5500M \
 --network=${network_name} \
