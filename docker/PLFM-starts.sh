@@ -44,22 +44,22 @@ git checkout -b ${JOB_NAME} upstream/develop
 rds_user_name=${stack}${user}
 
 clean_up_container() {
-if [ $(docker ps --format {{.Names}} -af name=$1) ]; then
-  docker stop $1
-  docker rm $1
-fi
+	if [ $(docker ps --format {{.Names}} -af name=$1) ]; then
+		docker stop $1
+		docker rm $1
+	fi
 }
 
 clean_up_network() {
-if [ $(docker network ls | grep -q $1 && echo $?) ]; then
-  docker network rm $1
-fi
+	if [ $(docker network ls | grep -q $1 && echo $?) ]; then
+		docker network rm $1
+	fi
 }
 
 clean_up_volumes() {
-  set +e
-  docker volume prune -f
-  set -e
+	if [ $label = windows-aws-containers ]; then
+		docker volume prune -f
+	fi
 }
 
 # the containers are ${JOB_NAME}-rds and ${JOB_NAME}-plfm
@@ -80,12 +80,10 @@ mkdir -p ${m2_cache_parent_folder}/.m2/
 
 if [ $label = windows-aws-containers ]
 then
-  network_driver=l2bridge
+	docker network create --driver l2bridge ${network_name}
 else
-  network_driver=bridge
+	docker network create --driver bridge ${network_name}
 fi
-
-docker network create --driver ${network_driver} ${network_name}
 
 # start up rds container
 docker run --name ${rds_container_name} \
