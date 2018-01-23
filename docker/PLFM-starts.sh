@@ -80,9 +80,9 @@ mkdir -p ${m2_cache_parent_folder}/.m2/
 
 if [ $label = windows-aws-containers ]
 then
-  network_driver = l2bridge
+  network_driver=l2bridge
 else
-  network_driver = bridge
+  network_driver=bridge
 fi
 
 docker network create --driver ${network_driver} ${network_name}
