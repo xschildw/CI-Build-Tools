@@ -59,7 +59,7 @@ clean_up_network() {
 }
 
 clean_up_volumes() {
-	if [ $label = windows-aws-containers ]; then
+	if [ $label != windows-aws-containers ]; then
 		echo "cleaning up volumes ..."
 		docker volume prune -f
 	fi
