@@ -88,7 +88,7 @@ mkdir -p ${m2_cache_parent_folder}/.m2/
 if [ $label = windows-aws-containers ]; then
 	echo "creating l2bridge network ..."
 	docker network create --driver l2bridge ${network_name}
-elif
+else
 	echo "creating bridge network ..."
 	docker network create --driver bridge ${network_name}
 fi
