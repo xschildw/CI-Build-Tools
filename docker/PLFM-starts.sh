@@ -18,6 +18,9 @@
 # rds_password - the password for the build database, common to all dev builds
 # JOB_NAME - a unique string differentiating concurrent builds.  if omitted is the stack + user
 
+## export the jenkins-defined environment variables
+export label
+
 # remove the last build clone
 set +e
 rm -R Synapse-Repository-Services
