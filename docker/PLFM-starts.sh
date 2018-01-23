@@ -102,7 +102,7 @@ docker run --name ${rds_container_name} \
 -e MYSQL_DATABASE=${rds_user_name} \
 -e MYSQL_USER=${rds_user_name} \
 -e MYSQL_PASSWORD=${rds_password} \
--v /etc/localtime:/etc/localtime:ro \
+# -v /etc/localtime:/etc/localtime:ro \
 -d mysql:5.6
 
 # make sure RDS is ready to go
@@ -122,7 +122,7 @@ docker run -i --rm --name ${plfm_container_name} \
 --link ${rds_container_name}:${rds_container_name} \
 -v ${m2_cache_parent_folder}/.m2:/root/.m2 \
 -v ${src_folder}:/repo \
--v /etc/localtime:/etc/localtime:ro \
+# -v /etc/localtime:/etc/localtime:ro \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
 -w /repo \
 maven:3-jdk-8 \
