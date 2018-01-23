@@ -78,7 +78,14 @@ clean_up_volumes
 
 mkdir -p ${m2_cache_parent_folder}/.m2/
 
-docker network create --driver bridge ${network_name}
+if [ $label = windows-aws-containers ]
+then
+  network_driver = l2bridge
+else
+  network_driver = bridge
+fi
+
+docker network create --driver ${network_driver} ${network_name}
 
 # start up rds container
 docker run --name ${rds_container_name} \
