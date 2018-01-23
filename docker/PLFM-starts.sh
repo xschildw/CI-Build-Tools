@@ -57,7 +57,7 @@ clean_up_network() {
 }
 
 clean_up_volumes() {
-	if [ $label = windows-aws-containers ]; then
+	if [ $label == windows-aws-containers ]; then
 		docker volume prune -f
 	fi
 }
@@ -78,7 +78,7 @@ clean_up_volumes
 
 mkdir -p ${m2_cache_parent_folder}/.m2/
 
-if [ $label = windows-aws-containers ]
+if [ $label == windows-aws-containers ]
 then
 	docker network create --driver l2bridge ${network_name}
 else
