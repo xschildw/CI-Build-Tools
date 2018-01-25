@@ -62,10 +62,8 @@ clean_up_network() {
 }
 
 clean_up_volumes() {
-	if [ $label != windows-aws-containers ]; then
-		echo "cleaning up volumes ..."
-		docker volume prune -f
-	fi
+	echo "cleaning up volumes ..."
+	docker volume prune -f
 }
 
 # the containers are ${JOB_NAME}-rds and ${JOB_NAME}-plfm
@@ -85,13 +83,8 @@ clean_up_volumes
 echo "creating .m2 folder ..."
 mkdir -p ${m2_cache_parent_folder}/.m2/
 
-if [ $label = windows-aws-containers ]; then
-	echo "creating l2bridge network: ${network_name} ..."
-	docker network create --driver l2bridge ${network_name}
-else
-	echo "creating bridge network: ${network_name} ..."
-	docker network create --driver bridge ${network_name}
-fi
+echo "creating bridge network: ${network_name} ..."
+docker network create --driver bridge ${network_name}
 
 # start up rds container
 echo "starting up rds container: ${rds_container_name}..."
@@ -111,8 +104,6 @@ tables_schema_name=${rds_user_name}tables
 docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "CREATE SCHEMA ${tables_schema_name};"
 docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "GRANT ALL ON ${tables_schema_name}.* TO '${rds_user_name}'@'%';"
 
-cd integration-test
-
 # create plfm container and run `mvn cargo:run`
 echo "creating plfm container: ${plfm_container_name} ..."
 docker run -i --rm --name ${plfm_container_name} \
@@ -124,7 +115,7 @@ docker run -i --rm --name ${plfm_container_name} \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
 -w /repo \
 maven:3-jdk-8 \
-bash -c "mvn cargo:run \
+bash -c "cd integration-test; mvn cargo:run \
 -Dorg.sagebionetworks.repository.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
 -Dorg.sagebionetworks.id.generator.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
 -Dorg.sagebionetworks.stackEncryptionKey=${org_sagebionetworks_stackEncryptionKey} \
