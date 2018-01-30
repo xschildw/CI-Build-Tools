@@ -15,9 +15,7 @@
 # org_sagebionetworks_stackEncryptionKey - the stack encryption key, common to all dev builds
 # rds_password - the password for the build database, common to all dev builds
 
-
-## export the jenkins-defined environment variables
-export label
+currentdir="$PWD"
 
 # remove the last build clone
 set +e
@@ -66,7 +64,7 @@ clean_up_container ${rds_container_name}
 clean_up_volumes
 
 echo "creating .m2 folder ..."
-mkdir -p ../.m2/
+mkdir -p ${currentdir}/.m2/
 
 # start up rds container
 echo "starting up rds container: ${rds_container_name}..."
@@ -91,8 +89,8 @@ docker run -i --rm --name ${plfm_container_name} \
 -m 5500M \
 -p 8888:8080
 --link ${rds_container_name}:${rds_container_name} \
--v ../.m2:/root/.m2 \
--v .:/repo \
+-v ${currentdir}/.m2:/root/.m2 \
+-v ${currentdir}/Synapse-Repository-Services:/repo \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
 -w /repo \
 -d maven:3-jdk-8 \
