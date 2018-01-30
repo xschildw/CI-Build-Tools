@@ -17,12 +17,6 @@ if [ $(docker ps --format {{.Names}} -af name=$1) ]; then
 fi
 }
 
-clean_up_network() {
-if [ $(docker network ls | grep -q $1 && echo $?) ]; then
-  docker network rm $1
-fi
-}
-
 clean_up_volumes() {
   docker volume prune -f
 }
@@ -33,9 +27,6 @@ clean_up_container ${plfm_container_name}
 # remove rds container, if any
 rds_container_name=${JOB_NAME}-rds
 clean_up_container ${rds_container_name}
-# remove the network if it's still there from last time
-network_name=${JOB_NAME}
-clean_up_network ${network_name}
 
 clean_up_volumes
 

@@ -9,7 +9,7 @@
 # GITHUB_TOKEN -- The Github token that grants access to GITHUB_ACCOUNT for USERNAME
 # USER_EMAIL -- The email of the USERNAME above
 
-# user - e.g. 'pjmhill'
+# user - e.g. 'ktruong'
 # m2_cache_parent_folder - the folder within which .m2 is to be found
 # src_folder - the folder within which the source code is found
 # org_sagebionetworks_stack_iam_id - the id of the developer's AWS secret key
@@ -54,13 +54,6 @@ clean_up_container() {
 	fi
 }
 
-clean_up_network() {
-	if [ $(docker network ls | grep -q $1 && echo $?) ]; then
-		echo "cleaning up network ..."
-		docker network rm $1
-	fi
-}
-
 clean_up_volumes() {
 	echo "cleaning up volumes ..."
 	docker volume prune -f
@@ -74,22 +67,15 @@ clean_up_container ${plfm_container_name}
 # remove rds container, if any
 rds_container_name=${JOB_NAME}-rds
 clean_up_container ${rds_container_name}
-# remove the network if it's still there from last time
-network_name=${JOB_NAME}
-clean_up_network ${network_name}
 
 clean_up_volumes
 
 echo "creating .m2 folder ..."
 mkdir -p ${m2_cache_parent_folder}/.m2/
 
-echo "creating bridge network: ${network_name} ..."
-docker network create --driver bridge ${network_name}
-
 # start up rds container
 echo "starting up rds container: ${rds_container_name}..."
 docker run --name ${rds_container_name} \
---network=${network_name} \
 -m 1500M \
 -e MYSQL_ROOT_PASSWORD=default-pw \
 -e MYSQL_DATABASE=${rds_user_name} \
@@ -108,14 +94,15 @@ docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "GRANT ALL ON
 echo "creating plfm container: ${plfm_container_name} ..."
 docker run -i --rm --name ${plfm_container_name} \
 -m 5500M \
---network=${network_name} \
+-p 8888:8080
 --link ${rds_container_name}:${rds_container_name} \
 -v ${m2_cache_parent_folder}/.m2:/root/.m2 \
 -v ${src_folder}:/repo \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
 -w /repo \
-maven:3-jdk-8 \
-bash -c "cd integration-test; mvn cargo:run \
+-d maven:3-jdk-8 \
+bash -c "cd integration-test; \
+mvn cargo:run \
 -Dorg.sagebionetworks.repository.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
 -Dorg.sagebionetworks.id.generator.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
 -Dorg.sagebionetworks.stackEncryptionKey=${org_sagebionetworks_stackEncryptionKey} \
@@ -128,6 +115,9 @@ bash -c "cd integration-test; mvn cargo:run \
 -Dorg.sagebionetworks.table.cluster.endpoint.0=${rds_container_name} \
 -Dorg.sagebionetworks.table.cluster.schema.0=${tables_schema_name} \
 -Duser.home=/root"
+
+# wait for tomcat setting up the container
+sleep 200
 
 # call your script that interact with PLFM after this,
 # then call PLFM-cleanup.sh to tear down this setup.
