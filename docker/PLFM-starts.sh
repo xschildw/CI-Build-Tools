@@ -10,8 +10,6 @@
 # USER_EMAIL -- The email of the USERNAME above
 
 # user - e.g. 'ktruong'
-# m2_cache_parent_folder - the folder within which .m2 is to be found
-# src_folder - the folder within which the source code is found
 # org_sagebionetworks_stack_iam_id - the id of the developer's AWS secret key
 # org_sagebionetworks_stack_iam_key - the developer's AWS secret key
 # org_sagebionetworks_stackEncryptionKey - the stack encryption key, common to all dev builds
@@ -71,7 +69,7 @@ clean_up_container ${rds_container_name}
 clean_up_volumes
 
 echo "creating .m2 folder ..."
-mkdir -p ${m2_cache_parent_folder}/.m2/
+mkdir -p ../.m2/
 
 # start up rds container
 echo "starting up rds container: ${rds_container_name}..."
@@ -96,8 +94,8 @@ docker run -i --rm --name ${plfm_container_name} \
 -m 5500M \
 -p 8888:8080
 --link ${rds_container_name}:${rds_container_name} \
--v ${m2_cache_parent_folder}/.m2:/root/.m2 \
--v ${src_folder}:/repo \
+-v ../.m2:/root/.m2 \
+-v .:/repo \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
 -w /repo \
 -d maven:3-jdk-8 \
