@@ -14,7 +14,7 @@
 # org_sagebionetworks_stack_iam_key - the developer's AWS secret key
 # org_sagebionetworks_stackEncryptionKey - the stack encryption key, common to all dev builds
 # rds_password - the password for the build database, common to all dev builds
-# JOB_NAME - a unique string differentiating concurrent builds.  if omitted is the stack + user
+
 
 ## export the jenkins-defined environment variables
 export label
@@ -25,9 +25,7 @@ rm -R Synapse-Repository-Services
 set -e
 
 # determine job name
-if [ ! ${JOB_NAME} ]; then
-	JOB_NAME=${stack}${user}
-fi
+JOB_NAME=${stack}${user}
 
 # clone/pull the github repo
 git clone https://github.com/Sage-Bionetworks/Synapse-Repository-Services.git
