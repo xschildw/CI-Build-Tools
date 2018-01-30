@@ -63,7 +63,7 @@ clean_up_container ${rds_container_name}
 
 clean_up_volumes
 
-echo "creating .m2 folder ..."
+echo "creating .m2 folder at ${currentdir}/.m2/ ..."
 mkdir -p ${currentdir}/.m2/
 
 # start up rds container
