@@ -24,8 +24,7 @@ set +e
 rm -R Synapse-Repository-Services
 set -e
 
-# determine job name
-JOB_NAME=${stack}${user}
+build=${stack}${user}
 
 # clone/pull the github repo
 git clone https://github.com/Sage-Bionetworks/Synapse-Repository-Services.git
@@ -38,7 +37,7 @@ git config user.name "${USERNAME}"
 git config user.email "${USER_EMAIL}"
 
 git fetch upstream
-git checkout -b ${JOB_NAME} upstream/develop
+git checkout -b ${build} upstream/develop
 
 rds_user_name=${stack}${user}
 
@@ -55,13 +54,13 @@ clean_up_volumes() {
 	docker volume prune -f
 }
 
-# the containers are ${JOB_NAME}-rds and ${JOB_NAME}-plfm
+# the containers are ${build}-rds and ${build}-plfm
 
 # remove plfm container, if any
-plfm_container_name=${JOB_NAME}-plfm
+plfm_container_name=${build}-plfm
 clean_up_container ${plfm_container_name}
 # remove rds container, if any
-rds_container_name=${JOB_NAME}-rds
+rds_container_name=${build}-rds
 clean_up_container ${rds_container_name}
 
 clean_up_volumes
