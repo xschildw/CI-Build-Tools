@@ -78,7 +78,7 @@ docker run --name ${rds_container_name} \
 -d mysql:5.6
 
 # make sure RDS is ready to go
-sleep 20
+sleep 40
 
 tables_schema_name=${rds_user_name}tables
 docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "CREATE SCHEMA ${tables_schema_name};"
