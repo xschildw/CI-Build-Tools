@@ -95,7 +95,21 @@ docker run --name ${plfm_container_name} \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
 -w /repo \
 -d maven:3-jdk-8 \
-bash -c "cd integration-test; \
+bash -c "mvn clean install \
+-Dmaven.test.skip=true
+-Dorg.sagebionetworks.repository.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
+-Dorg.sagebionetworks.id.generator.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
+-Dorg.sagebionetworks.stackEncryptionKey=${org_sagebionetworks_stackEncryptionKey} \
+-Dorg.sagebionetworks.stack.iam.id=${org_sagebionetworks_stack_iam_id} \
+-Dorg.sagebionetworks.stack.iam.key=${org_sagebionetworks_stack_iam_key} \
+-Dorg.sagebionetworks.stack.instance=${user} \
+-Dorg.sagebionetworks.developer=${user} \
+-Dorg.sagebionetworks.stack=${stack} \
+-Dorg.sagebionetworks.table.enabled=true \
+-Dorg.sagebionetworks.table.cluster.endpoint.0=${rds_container_name} \
+-Dorg.sagebionetworks.table.cluster.schema.0=${tables_schema_name} \
+-Duser.home=/root;\
+cd integration-test; \
 mvn cargo:run \
 -Dorg.sagebionetworks.repository.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
 -Dorg.sagebionetworks.id.generator.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
