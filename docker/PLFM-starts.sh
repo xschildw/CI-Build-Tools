@@ -17,7 +17,7 @@
 
 # setting up the variables
 currentdir="$PWD"
-stack=client
+stack=dev
 build=${stack}${user}
 rds_user_name=${stack}${user}
 # the containers are ${build}-rds and ${build}-plfm
