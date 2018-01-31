@@ -89,7 +89,7 @@ docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "GRANT ALL ON
 # create plfm container, build the war files, and run `mvn cargo:run`
 echo "creating plfm container: ${plfm_container_name} ..."
 docker run --name ${plfm_container_name} \
--u jenkins
+-u jenkins \
 -m 5500M \
 -p 8888:8080 \
 --link ${rds_container_name}:${rds_container_name} \
@@ -99,7 +99,7 @@ docker run --name ${plfm_container_name} \
 -w /repo \
 -d maven:3-jdk-8 \
 bash -c "mvn clean install \
--Dmaven.test.skip=true
+-Dmaven.test.skip=true \
 -Dorg.sagebionetworks.repository.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
 -Dorg.sagebionetworks.id.generator.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
 -Dorg.sagebionetworks.stackEncryptionKey=${org_sagebionetworks_stackEncryptionKey} \
