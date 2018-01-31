@@ -85,7 +85,7 @@ docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "GRANT ALL ON
 
 # create plfm container and run `mvn cargo:run`
 echo "creating plfm container: ${plfm_container_name} ..."
-docker run -i --name ${plfm_container_name} \
+docker run -it --name ${plfm_container_name} \
 -m 5500M \
 -p 8888:8080 \
 --link ${rds_container_name}:${rds_container_name} \
@@ -94,7 +94,7 @@ docker run -i --name ${plfm_container_name} \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
 -w /repo \
 -d maven:3-jdk-8 \
--d bash -c "cd integration-test; \
+bash -c "cd integration-test; \
 mvn cargo:run \
 -Dorg.sagebionetworks.repository.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
 -Dorg.sagebionetworks.id.generator.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
