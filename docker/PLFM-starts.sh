@@ -16,7 +16,7 @@
 # rds_password - the password for the build database, common to all dev builds
 
 currentdir="$PWD"
-stack=client-build
+stack=client
 
 # remove the last build clone
 set +e
