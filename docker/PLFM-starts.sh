@@ -85,7 +85,7 @@ docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "GRANT ALL ON
 
 # create plfm container and run `mvn cargo:run`
 echo "creating plfm container: ${plfm_container_name} ..."
-docker run -it --name ${plfm_container_name} \
+docker run --name ${plfm_container_name} \
 -m 5500M \
 -p 8888:8080 \
 --link ${rds_container_name}:${rds_container_name} \
