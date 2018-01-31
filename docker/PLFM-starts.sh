@@ -20,7 +20,7 @@ stack=client
 
 # remove the last build clone
 set +e
-rm -R Synapse-Repository-Services
+sudo rm -rf Synapse-Repository-Services
 set -e
 
 build=${stack}${user}
