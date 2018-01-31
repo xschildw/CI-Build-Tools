@@ -89,13 +89,12 @@ docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "GRANT ALL ON
 # create plfm container, build the war files, and run `mvn cargo:run`
 echo "creating plfm container: ${plfm_container_name} ..."
 docker run --name ${plfm_container_name} \
--u jenkins \
+-e USERID=$UID
 -m 5500M \
 -p 8888:8080 \
 --link ${rds_container_name}:${rds_container_name} \
 -v ${currentdir}/.m2:/jenkins/.m2 \
--v ${currentdir}/Synapse-Repository-Services:/repo \
--v /etc/passwd:/etc/passwd:ro \
+-v $(pwd):/home/$USER/repo \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
 -w /repo \
 -d maven:3-jdk-8 \
@@ -112,7 +111,7 @@ bash -c "mvn clean install \
 -Dorg.sagebionetworks.table.enabled=true \
 -Dorg.sagebionetworks.table.cluster.endpoint.0=${rds_container_name} \
 -Dorg.sagebionetworks.table.cluster.schema.0=${tables_schema_name} \
--Duser.home=/jenkins;\
+-Duser.home=/home/$USER;\
 cd integration-test; \
 mvn cargo:run \
 -Dorg.sagebionetworks.repository.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
@@ -126,7 +125,7 @@ mvn cargo:run \
 -Dorg.sagebionetworks.table.enabled=true \
 -Dorg.sagebionetworks.table.cluster.endpoint.0=${rds_container_name} \
 -Dorg.sagebionetworks.table.cluster.schema.0=${tables_schema_name} \
--Duser.home=/jenkins"
+-Duser.home=/home/$USER"
 
 # wait for tomcat setting up the container
 sleep 200
