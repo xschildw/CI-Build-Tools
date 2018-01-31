@@ -95,6 +95,7 @@ docker run --name ${plfm_container_name} \
 --link ${rds_container_name}:${rds_container_name} \
 -v ${currentdir}/.m2:/jenkins/.m2 \
 -v ${currentdir}/Synapse-Repository-Services:/repo \
+-v /etc/passwd:/etc/passwd:ro \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
 -w /repo \
 -d maven:3-jdk-8 \
