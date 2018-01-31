@@ -96,7 +96,7 @@ docker run --name ${plfm_container_name} \
 -v ${currentdir}/.m2:/jenkins/.m2 \
 -v ${currentdir}/Synapse-Repository-Services:/home/$USER/repo \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
--w /repo \
+-w /home/$USER/repo \
 -d maven:3-jdk-8 \
 bash -c "mvn clean install \
 -Dmaven.test.skip=true \
