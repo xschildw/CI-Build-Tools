@@ -24,7 +24,7 @@ then
   ## the Rscript binary is also set because it is configured as a slave link to R
   ## the command for setting up a new version as an alternative is:
   ## sudo update-alternatives --install /usr/bin/R R /usr/local/R/R-<RVERS>/bin/R <somePriorityValue> --slave /usr/bin/Rscript Rscript /usr/local/R/R-<RVERS>/bin/Rscript
-elif [ $label = windows-aws-containers ]
+elif [ $label = windows-aws ]
 then
   echo "*** windows condition matches in shell script ***"
   ## set the active R version
