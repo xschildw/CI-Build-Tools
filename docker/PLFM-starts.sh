@@ -15,31 +15,16 @@
 # org_sagebionetworks_stackEncryptionKey - the stack encryption key, common to all dev builds
 # rds_password - the password for the build database, common to all dev builds
 
+# setting up the variables
 currentdir="$PWD"
 stack=client
-
-# remove the last build clone
-set +e
-rm -rf Synapse-Repository-Services
-set -e
-
 build=${stack}${user}
-
-# clone/pull the github repo
-git clone https://github.com/Sage-Bionetworks/Synapse-Repository-Services.git
-# https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
-
-cd Synapse-Repository-Services
-
-git remote add upstream https://${USERNAME}:${GITHUB_TOKEN}@github.com/Sage-Bionetworks/Synapse-Repository-Services.git
-git config user.name "${USERNAME}"
-git config user.email "${USER_EMAIL}"
-
-git fetch upstream
-git checkout -b ${build} upstream/develop
-
 rds_user_name=${stack}${user}
+# the containers are ${build}-rds and ${build}-plfm
+plfm_container_name=${build}-plfm
+rds_container_name=${build}-rds
 
+# define helper functions
 clean_up_container() {
 	if [ $(docker ps --format {{.Names}} -af name=$1) ]; then
 		echo "cleaning up containers ..."
@@ -53,16 +38,33 @@ clean_up_volumes() {
 	docker volume prune -f
 }
 
-# the containers are ${build}-rds and ${build}-plfm
+# clean up environment
 
 # remove plfm container, if any
-plfm_container_name=${build}-plfm
 clean_up_container ${plfm_container_name}
 # remove rds container, if any
-rds_container_name=${build}-rds
 clean_up_container ${rds_container_name}
 
 clean_up_volumes
+
+# remove the last build dirs
+set +e
+rm -rf Synapse-Repository-Services
+rm -rf ${currentdir}/.m2
+set -e
+
+# clone/pull the github repo
+git clone https://github.com/Sage-Bionetworks/Synapse-Repository-Services.git
+# https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
+
+cd Synapse-Repository-Services
+
+git remote add upstream https://${USERNAME}:${GITHUB_TOKEN}@github.com/Sage-Bionetworks/Synapse-Repository-Services.git
+git config user.name "${USERNAME}"
+git config user.email "${USER_EMAIL}"
+
+git fetch upstream
+git checkout -b ${build} upstream/develop
 
 echo "creating .m2 folder at ${currentdir}/.m2/ ..."
 mkdir -p ${currentdir}/.m2/
@@ -78,7 +80,7 @@ docker run --name ${rds_container_name} \
 -d mysql:5.6
 
 # make sure RDS is ready to go
-sleep 40
+sleep 20
 
 tables_schema_name=${rds_user_name}tables
 docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "CREATE SCHEMA ${tables_schema_name};"
