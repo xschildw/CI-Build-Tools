@@ -86,7 +86,7 @@ set -e
 R -e ".libPaths('../RLIB');\
 library(rmarkdown);\
 if (pandoc_available())\
-  cat('pandoc', as.character(pandoc_version()), 'is available!\n');\
+  cat('pandoc', as.character(pandoc_version()), 'is available.');\
 devtools::install_github('hadley/pkgdown');\
 pkgdown::build_site()"
 
