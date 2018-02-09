@@ -84,6 +84,9 @@ rm -rf docs/
 set -e
 
 R -e ".libPaths('../RLIB');\
+library(rmarkdown);\
+if (pandoc_available())\
+  cat('pandoc', as.character(pandoc_version()), 'is available!\n');\
 devtools::install_github('hadley/pkgdown');\
 pkgdown::build_site()"
 
