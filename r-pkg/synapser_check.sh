@@ -6,9 +6,9 @@ export ATTEMPTS=5
 export FOUND=False
 while [ $ATTEMPTS -gt 0 ]
 do
-  if [ $(curl -v --silent ${RAN}/src/contrib/PACKAGES 2>&1 | grep "Package: synapser" -A 2 | grep "Version: ${VERSION_TO_CHECK}" | wc -c) -eq 0 ]
+  if [ $( curl -v --silent ${RAN}/src/contrib/PACKAGES 2>&1 | grep "Package: synapser" -A 2 | grep "Version: ${VERSION_TO_CHECK}" | wc -c ) -eq 0 ]
   then
-    sleep(10)
+    sleep 10
     ATTEMPTS=$(( $ATTEMPTS - 1 ))
   else
     FOUND=TRUE
