@@ -20,7 +20,7 @@ done
 ## Activate the correct R version.
 ##
 
-if [ $FOUND ]
+if [ $FOUND == "TRUE" ]
 then 
   curl -s https://raw.githubusercontent.com/Sage-Bionetworks/CI-Build-Tools/master/r-pkg/switch-r-version.sh \
    | bash -s arg1 arg2
