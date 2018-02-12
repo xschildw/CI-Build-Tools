@@ -18,19 +18,6 @@ do
   do
     for file in `ls $dir/*`
     do
-    
-      file_version=`echo ${file%.*} | awk -F'[_]' '{print $2}' | sed 's/.tar//g'`
-      if [ -z ${VERSION} ]
-      then
-      	export VERSION=$file_version
-      else
-      	if [ "$VERSION" != "$file_version" ]
-        then
-          echo "artifacts have different version"
-          exit 1
-        fi
-      fi
-      
       echo file $file vers $vers
       cp $file $vers
     done
