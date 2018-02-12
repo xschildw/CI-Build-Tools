@@ -2,7 +2,7 @@
 ## and installable to multiple platforms.
 
 ## First check to see if the new version is available
-export ATTEMPTS = 5
+export ATTEMPTS=5
 export FOUND=False
 while [ $ATTEMPTS -gt 0 ]
 do
