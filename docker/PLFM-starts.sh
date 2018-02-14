@@ -86,6 +86,13 @@ tables_schema_name=${rds_user_name}tables
 docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "CREATE SCHEMA ${tables_schema_name};"
 docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "GRANT ALL ON ${tables_schema_name}.* TO '${rds_user_name}'@'%';"
 
+# add a Dockerfile and jenkins user
+echo "FROM maven:3-jdk-8" > Dockerfile
+echo "RUN useradd -r -u $UID jenkins" >> Dockerfile
+echo "USER jenkins" >> Dockerfile
+
+docker build -t maven-with-jenkins-user .
+
 # create plfm container, build the war files, and run `mvn cargo:run`
 echo "creating plfm container: ${plfm_container_name} ..."
 docker run --name ${plfm_container_name} \
@@ -99,8 +106,9 @@ docker run --name ${plfm_container_name} \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
 -e MAVEN_CONFIG="/home/jenkins/.m2" \
 -w /home/jenkins/repo \
--d maven:3-jdk-8 \
-bash -c "mvn clean install \
+-d maven-with-jenkins-user \
+bash -c "whoami;\
+mvn clean install \
 -Dmaven.test.skip=true \
 -Dorg.sagebionetworks.repository.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
 -Dorg.sagebionetworks.id.generator.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
