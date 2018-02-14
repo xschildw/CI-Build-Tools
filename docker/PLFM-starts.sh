@@ -93,11 +93,11 @@ docker run --name ${plfm_container_name} \
 -m 5500M \
 -p 8888:8080 \
 --link ${rds_container_name}:${rds_container_name} \
--v ${currentdir}/.m2:home/jenkins/.m2 \
+-v ${currentdir}/.m2:/home/jenkins/.m2 \
 -v ${currentdir}/Synapse-Repository-Services:/home/jenkins/repo \
 -v /etc/localtime:/etc/localtime:ro \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
--e MAVEN_CONFIG="home/jenkins/.m2" \
+-e MAVEN_CONFIG="/home/jenkins/.m2" \
 -w /home/jenkins/repo \
 -d maven:3-jdk-8 \
 bash -c "mvn clean install \
