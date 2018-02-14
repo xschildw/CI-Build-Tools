@@ -97,6 +97,7 @@ docker run --name ${plfm_container_name} \
 -v ${currentdir}/Synapse-Repository-Services:/home/jenkins/repo \
 -v /etc/localtime:/etc/localtime:ro \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
+-e MAVEN_CONFIG="/jenkins/.m2" \
 -w /home/jenkins/repo \
 -d maven:3-jdk-8 \
 bash -c "whoami;\
