@@ -94,10 +94,10 @@ docker run --name ${plfm_container_name} \
 -p 8888:8080 \
 --link ${rds_container_name}:${rds_container_name} \
 -v ${currentdir}/.m2:/jenkins/.m2 \
--v ${currentdir}/Synapse-Repository-Services:/home/$USER/repo \
+-v ${currentdir}/Synapse-Repository-Services:/home/jenkins/repo \
 -v /etc/localtime:/etc/localtime:ro \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
--w /home/$USER/repo \
+-w /home/jenkins/repo \
 -d maven:3-jdk-8 \
 bash -c "mvn clean install \
 -Dmaven.test.skip=true \
@@ -112,7 +112,7 @@ bash -c "mvn clean install \
 -Dorg.sagebionetworks.table.enabled=true \
 -Dorg.sagebionetworks.table.cluster.endpoint.0=${rds_container_name} \
 -Dorg.sagebionetworks.table.cluster.schema.0=${tables_schema_name} \
--Duser.home=/home/$USER;\
+-Duser.home=/home/jenkins;\
 cd integration-test; \
 mvn cargo:run \
 -Dorg.sagebionetworks.repository.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
@@ -126,7 +126,7 @@ mvn cargo:run \
 -Dorg.sagebionetworks.table.enabled=true \
 -Dorg.sagebionetworks.table.cluster.endpoint.0=${rds_container_name} \
 -Dorg.sagebionetworks.table.cluster.schema.0=${tables_schema_name} \
--Duser.home=/home/$USER"
+-Duser.home=/home/jenkins"
 
 # wait for tomcat setting up the container
 sleep 200
