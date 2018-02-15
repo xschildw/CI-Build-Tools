@@ -86,20 +86,29 @@ tables_schema_name=${rds_user_name}tables
 docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "CREATE SCHEMA ${tables_schema_name};"
 docker exec ${rds_container_name} mysql -uroot -pdefault-pw -sN -e "GRANT ALL ON ${tables_schema_name}.* TO '${rds_user_name}'@'%';"
 
+# add a Dockerfile and jenkins user
+echo "FROM maven:3-jdk-8" > Dockerfile
+echo "RUN useradd -r -u $UID jenkins" >> Dockerfile
+echo "USER jenkins" >> Dockerfile
+
+docker build -t maven-with-jenkins-user .
+
 # create plfm container, build the war files, and run `mvn cargo:run`
 echo "creating plfm container: ${plfm_container_name} ..."
 docker run --name ${plfm_container_name} \
--e USERID=$UID \
+--user $UID \
 -m 5500M \
 -p 8888:8080 \
 --link ${rds_container_name}:${rds_container_name} \
--v ${currentdir}/.m2:/jenkins/.m2 \
--v ${currentdir}/Synapse-Repository-Services:/home/$USER/repo \
+-v ${currentdir}/.m2:/home/jenkins/.m2 \
+-v ${currentdir}/Synapse-Repository-Services:/home/jenkins/repo \
 -v /etc/localtime:/etc/localtime:ro \
 -e MAVEN_OPTS="-Xms256m -Xmx2048m -XX:MaxPermSize=512m" \
--w /home/$USER/repo \
--d maven:3-jdk-8 \
-bash -c "mvn clean install \
+-e MAVEN_CONFIG="/home/jenkins/.m2" \
+-w /home/jenkins/repo \
+-d maven-with-jenkins-user \
+bash -c "whoami;\
+mvn clean install \
 -Dmaven.test.skip=true \
 -Dorg.sagebionetworks.repository.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
 -Dorg.sagebionetworks.id.generator.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
@@ -112,7 +121,7 @@ bash -c "mvn clean install \
 -Dorg.sagebionetworks.table.enabled=true \
 -Dorg.sagebionetworks.table.cluster.endpoint.0=${rds_container_name} \
 -Dorg.sagebionetworks.table.cluster.schema.0=${tables_schema_name} \
--Duser.home=/home/$USER;\
+-Duser.home=/home/jenkins;\
 cd integration-test; \
 mvn cargo:run \
 -Dorg.sagebionetworks.repository.database.connection.url=jdbc:mysql://${rds_container_name}/${rds_user_name} \
@@ -126,7 +135,7 @@ mvn cargo:run \
 -Dorg.sagebionetworks.table.enabled=true \
 -Dorg.sagebionetworks.table.cluster.endpoint.0=${rds_container_name} \
 -Dorg.sagebionetworks.table.cluster.schema.0=${tables_schema_name} \
--Duser.home=/home/$USER"
+-Duser.home=/home/jenkins"
 
 # wait for tomcat setting up the container
 sleep 200
