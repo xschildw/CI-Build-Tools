@@ -68,7 +68,7 @@ else
 fi
 
 R -e ".libPaths('../RLIB');\
-install.packages(c('xml2', 'fs', 'pack', 'R6', 'testthat', 'knitr', 'rmarkdown', 'PythonEmbedInR', 'devtools'),\
+install.packages(c('fs', 'pack', 'R6', 'testthat', 'knitr', 'rmarkdown', 'PythonEmbedInR', 'devtools'),\
  repos=c('http://cran.fhcrc.org', '${RAN}'))"
 
 # need to build the package to be able to build docs
@@ -87,7 +87,7 @@ R -e ".libPaths('../RLIB');\
 library(rmarkdown);\
 if (pandoc_available())\
   cat('pandoc', as.character(pandoc_version()), 'is available.');\
-devtools::install_github('hadley/pkgdown');\
+devtools::install_github('r-lib/pkgdown');\
 pkgdown::build_site()"
 
 ## clean up the temporary R library dir
