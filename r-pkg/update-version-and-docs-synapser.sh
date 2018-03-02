@@ -87,7 +87,7 @@ R -e ".libPaths('../RLIB');\
 library(rmarkdown);\
 if (pandoc_available())\
   cat('pandoc', as.character(pandoc_version()), 'is available.');\
-devtools::install_github('r-lib/pkgdown', ref = '@88de0954f7fce7635f850dfc895a5c24c4c222c1');\
+devtools::install_github('r-lib/pkgdown', ref = '897ffbc016549c11c4263cb5d1f6e9f5c99efb45');\
 pkgdown::build_site()"
 
 ## clean up the temporary R library dir
