@@ -28,25 +28,23 @@ fi
 curl -s https://raw.githubusercontent.com/Sage-Bionetworks/CI-Build-Tools/master/r-pkg/switch-r-version.sh \
  | bash -s arg1 arg2
 
+echo "try(remove.packages('PythonEmbedInR'), silent=T)" > test.R
+echo "try(remove.packages('synapser'), silent=T)" >> test.R
+echo "install.packages('synapser', repos=c('http://cran.fhcrc.org', Sys.getenv('RAN')))" >> test.R
+echo "library('synapser')" >> test.R
+
 if [ $label = windows-aws ]
 then
   ## build x64 version
   PATH=C:\\Program\ Files\\R\\$RVERS\\bin\\x64
-  R -e "try(remove.packages('PythonEmbedInR'), silent=T);\
-  try(remove.packages('synapser'), silent=T);\
-  install.packages('synapser', repos=c('http://cran.fhcrc.org', Sys.getenv('RAN')));\
-  library('synapser')"
+  R --vanilla < test.R
 
   ## build i386 version version
   PATH=C:\\Program\ Files\\R\\$RVERS\\bin\\i386
-  R -e "try(remove.packages('PythonEmbedInR'), silent=T);\
-  try(remove.packages('synapser'), silent=T);\
-  install.packages('synapser', repos=c('http://cran.fhcrc.org', Sys.getenv('RAN')));\
-  library('synapser')"
+  R --vanilla < test.R
 else
-  R -e "try(remove.packages('PythonEmbedInR'), silent=T);\
-  try(remove.packages('synapser'), silent=T);\
-  install.packages('synapser', repos=c('http://cran.fhcrc.org', Sys.getenv('RAN')));\
-  library('synapser')"
+  R --vanilla < test.R
 fi
+
+rm test.R
   
