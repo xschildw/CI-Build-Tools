@@ -35,6 +35,8 @@ echo "library('synapser')" >> test.R
 
 if [ $label = windows-aws ]
 then
+  oldPath = $PATH
+  
   ## build x64 version
   PATH=C:\\Program\ Files\\R\\$RVERS\\bin\\x64
   R --vanilla < test.R
@@ -42,6 +44,8 @@ then
   ## build i386 version version
   PATH=C:\\Program\ Files\\R\\$RVERS\\bin\\i386
   R --vanilla < test.R
+
+  PATH = $oldPath
 else
   R --vanilla < test.R
 fi
