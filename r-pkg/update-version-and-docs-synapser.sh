@@ -8,7 +8,7 @@
 # GITHUB_ACCOUNT -- The target Github account
 # REPO_NAME -- The repository to update
 # BRANCH -- The branch to push update to
-# USE_STAGING_RAN -- Set to True to download dependency (PythonEmbedInR) from staging RAN
+# RAN -- The R Archive Network URL to download synapser dependencies (PythonEmbedInR)
 
 # remove the last build clone
 set +e
@@ -59,13 +59,6 @@ set +e
 rm -rf ../RLIB
 set -e
 mkdir -p ../RLIB
-
-if [ ${USE_STAGING_RAN} ]
-then
-	RAN=https://sage-bionetworks.github.io/staging-ran
-else
-	RAN=https://sage-bionetworks.github.io/ran
-fi
 
 R -e ".libPaths('../RLIB');\
 install.packages(c('fs', 'pack', 'R6', 'testthat', 'knitr', 'rmarkdown', 'PythonEmbedInR', 'devtools'),\
