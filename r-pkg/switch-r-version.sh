@@ -23,7 +23,7 @@ then
   sudo update-alternatives --set R /usr/local/R/R-$RVERS/bin/R
   ## the Rscript binary is also set because it is configured as a slave link to R
   ## the command for setting up a new version as an alternative is:
-  ## sudo update-alternatives --install /usr/bin/R R /usr/local/R/R-<RVERS>/bin/R <somePriorityValue> --slave /usr/bin/Rscript Rscript /usr/local/R/R-<RVERS>/bin/Rscript
+  ## sudo update-alternatives --install /usr/local/bin/R R /usr/local/R/R-<RVERS>/bin/R <somePriorityValue> --slave /usr/local/bin/Rscript Rscript /usr/local/R/R-<RVERS>/bin/Rscript
 elif [ $label = windows-aws ]
 then
   echo "*** windows condition matches in shell script ***"
