@@ -51,7 +51,7 @@ do
       writePackagesType<-'mac.binary';\
       if ('"$RVERS"'=='3.3') {;\
           contribUrlType<-'mac.binary.mavericks';\
-      } else if ('"$RVERS"'=='3.4') {;\
+      } else if ('"$RVERS"'=='3.4' || '"$RVERS"'=='3.5') {;\
           contribUrlType<-'mac.binary.el-capitan';\
       } else {;\
           contribUrlType<-'mac.binary';\
