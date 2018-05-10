@@ -64,7 +64,7 @@ git config user.name "${USERNAME}"
 git config user.email "${USER_EMAIL}"
 
 git fetch upstream
-git checkout -b ${build} upstream/develop
+git checkout -b ${build} upstream/${RELEASE_BRANCH}
 
 echo "creating .m2 folder at ${currentdir}/.m2/ ..."
 mkdir -p ${currentdir}/.m2/
