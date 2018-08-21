@@ -80,7 +80,7 @@ R -e ".libPaths('../RLIB');\
 library(rmarkdown);\
 if (pandoc_available())\
   cat('pandoc', as.character(pandoc_version()), 'is available.');\
-pkgdown::build_site()"
+pkgdown::build_site(preview = FALSE)"
 
 ## clean up the temporary R library dir
 rm -rf ../RLIB
