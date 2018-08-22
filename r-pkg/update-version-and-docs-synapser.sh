@@ -9,6 +9,9 @@
 # REPO_NAME -- The repository to update
 # BRANCH -- The branch to push update to
 # RAN -- The R Archive Network URL to download synapser dependencies (PythonEmbedInR)
+# SYN_USERNAME -- The Synapse creds that is used to build vignettes
+# SYN_APIKEY -- The Synapse creds that is used to build vignettes
+# SYNAPSE_BASE_ENDPOINT -- The dev-stack that is used to build vignettes
 
 # remove the last build clone
 set +e
@@ -70,6 +73,23 @@ R CMD build ./ --no-build-vignettes
 
 ## now install it, creating the deployable archive as a side effect
 R CMD INSTALL ./ --library=../RLIB
+
+# add Synapse configuration to build vignettes
+# store the login credentials
+echo "[authentication]" > orig.synapseConfig
+echo "username=${SYN_USERNAME}" >> orig.synapseConfig
+echo "apiKey=${SYN_APIKEY}" >> orig.synapseConfig
+# store synapse base endpoint
+echo "[endpoints]" >> orig.synapseConfig
+echo "repoEndpoint=${SYNAPSE_BASE_ENDPOINT}/repo/v1" >> orig.synapseConfig
+echo "authEndpoint=${SYNAPSE_BASE_ENDPOINT}/auth/v1" >> orig.synapseConfig
+echo "fileHandleEndpoint=${SYNAPSE_BASE_ENDPOINT}/file/v1" >> orig.synapseConfig
+
+# Mac OS settings
+set +e
+rm -rf ~/.synapseCache
+set -e
+mv orig.synapseConfig ~/.synapseConfig
 
 # clean up the docs folder before building a new site
 set +e
