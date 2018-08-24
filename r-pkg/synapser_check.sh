@@ -2,7 +2,6 @@
 ## and installable to multiple platforms.
 
 ## First check to see if the new version is available
-sleep 600
 if [ $( curl -v --silent ${RAN}/src/contrib/PACKAGES 2>&1 | grep "Package: synapser" -A 2 | grep "Version: ${VERSION_TO_CHECK}" | wc -c ) -eq 0 ]
 then 
   echo "Version ${VERSION_TO_CHECK} not found."
