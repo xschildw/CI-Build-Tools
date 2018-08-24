@@ -81,3 +81,5 @@ cd ..
 rm -rf ${REPO_NAME}
 rm -rf unpacked
 
+# wait for the artifacts to be available on ran/staging-ran
+sleep 600
