@@ -15,15 +15,18 @@ protocol="$(echo $URL | grep :// | sed -e's,^\(.*://\).*,\1,g')"
 # remove the protocol from url
 url="$(echo ${URL/$protocol/})" 
 path=/$(echo $url | grep / | cut -d/ -f2-)
+echo $path
 
 sig_timestamp=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
 sig_data="$USER_ID$path$sig_timestamp"
 # sig_data_raw=$(echo $sig_data | xxd)
+echo $sig_data
 
 decoded_key=$(echo $APIKEY | base64 --decode)
 
 signature_raw=$(echo -n "$sig_data" | openssl dgst -sha1 -hmac "$decoded_key")
 prefix_to_remove="(stdin)= " 
 signature="$(echo ${signature_raw#$prefix_to_remove} | base64)" 
+echo $signatures
 
 echo -H \"userId:$USER_ID\" -H \"signatureTimestamp:$sig_timestamp\" -H \"signature:$signature\"
