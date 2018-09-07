@@ -19,7 +19,9 @@ path=$(echo $url | grep / | cut -d/ -f2-)
 sig_timestamp=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
 sig_data="$USER_ID$path$sig_timestamp"
 
-signature_raw=$(echo -n "$sig_data" | openssl dgst -sha1 -hmac "$APIKEY")
+decoded_key=$(echo QWxhZGRpbjpvcGVuIHNlc2FtZQ== | base64 --decode)
+
+signature_raw=$(echo -n "$sig_data" | openssl dgst -sha1 -hmac "$decoded_key")
 prefix_to_remove="(stdin)= " 
 signature="$(echo ${signature_raw#$prefix_to_remove})" 
 
