@@ -23,6 +23,6 @@ decoded_key=$(echo $APIKEY | base64 --decode)
 
 signature_raw=$(echo -n "$sig_data" | openssl dgst -sha1 -hmac "$decoded_key")
 prefix_to_remove="(stdin)= " 
-signature="$(echo ${signature_raw#$prefix_to_remove})" 
+signature="$(echo ${signature_raw#$prefix_to_remove} | base64)" 
 
 echo -H \"userId:$USER_ID\" -H \"signatureTimestamp:$sig_timestamp\" -H \"signature:$signature\"
