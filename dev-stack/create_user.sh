@@ -21,29 +21,20 @@ curl --fail-early $REPO_ENDPOINT/version
 url=$REPO_ENDPOINT/admin/user
 data="{\"username\":\"$USERNAME_TO_CREATE\", \"email\":\"$EMAIL_TO_CREATE\", \"password\":\"$PASSWORD_TO_CREATE\"}"
 signed_headers=$(curl -s https://raw.githubusercontent.com/kimyen/CI-Build-Tools/PLFM-5028/dev-stack/sign_request.sh | bash -s $url $ADMIN_USERNAME $ADMIN_APIKEY)
-echo curl -i -v -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" $signed_headers -d \'$data\' \"$url\" | bash
+new_user=$(echo curl -i -v -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" $signed_headers -d \'$data\' \"$url\" | bash)
+prefix="{\"id\":\""
+suffix="\"}"
+id=$(echo $new_user | sed -e "s/^$prefix//" -e "s/$suffix$//")
 
-## Step 3 -- Login and get sessionToken
-# POST /login
-url=$REPO_ENDPOINT/login
-data="{\"username\":\"$USERNAME_TO_CREATE\", \"password\":\"$PASSWORD_TO_CREATE\"}"
-login_result=$(echo curl -i -v -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" -d \'$data\' \"$url\" | bash)
-session_token_raw=$(grep sessionToken $login_result)
-prefix_to_remove="sessionToken"
-session_token="$(echo ${session_token_raw#$prefix_to_remove})" 
-
-## Step 4 -- Get the userId
-# GET /userProfile
-url=$REPO_ENDPOINT/userProfile
-profile=$(echo curl -i -H \"Accept:application/json\" -H \"sessionToken:$session_token\" $url | bash)
-id_raw=$(grep id $profile)
-prefix_to_remove="ownerId"
-id="$(echo ${id_raw#$prefix_to_remove})"
-
-## Step 5 -- Add the test user to Certified user group
+## Step 3 -- Add the test user to Certified user group
 # PUT /user/{id}/certificationStatus
 url=$REPO_ENDPOINT/user/$id/certificationStatus?isCertified=True
 signed_headers=$(curl -s https://raw.githubusercontent.com/kimyen/CI-Build-Tools/PLFM-5028/dev-stack/sign_request.sh | bash -s $url $ADMIN_USERNAME $ADMIN_APIKEY)
 echo curl -i -v -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" $signed_headers -d \'$data\' \"$url\" | bash
 
+## Step 4 -- Verified that the new user can login using username and password
+# POST /login
+url=$REPO_ENDPOINT/login
+data="{\"username\":\"$USERNAME_TO_CREATE\", \"password\":\"$PASSWORD_TO_CREATE\"}"
+login_result=$(echo curl -i -v -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" -d \'$data\' \"$url\" | bash)
 
