@@ -19,12 +19,11 @@ echo $path
 
 sig_timestamp=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
 sig_data="$USER_ID$path$sig_timestamp"
-# sig_data_raw=$(echo $sig_data | xxd)
 echo $sig_data
 
 decoded_key=$(echo $APIKEY | base64 --decode)
 
-signature_raw=$(echo -n "$sig_data" | openssl dgst -sha1 -hmac "$decoded_key")
+signature_raw=$(echo -n "$sig_data" | iconv -t UTF8 | openssl dgst -sha1 -hmac "$decoded_key")
 prefix_to_remove="(stdin)= " 
 signature="$(echo ${signature_raw#$prefix_to_remove} | base64)" 
 echo $signatures
