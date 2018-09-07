@@ -11,19 +11,16 @@ URL=$1
 USER_ID=$2
 APIKEY=$3
 
-function extract_path{
-	proto="$(echo $1 | grep :// | sed -e's,^\(.*://\).*,\1,g')"
-	# remove the protocol
-	url="$(echo ${1/$proto/})"
-	echo $url | grep / | cut -d/ -f2-
-}
+protocol="$(echo $URL | grep :// | sed -e's,^\(.*://\).*,\1,g')"
+# remove the protocol from url
+url="$(echo ${URL/$protocol/})" 
+path=$(echo $url | grep / | cut -d/ -f2-)
 
-path=$(extract_path $URL)
-
-ISO_FORMAT="%Y-%m-%dT%H:%M:%S.000Z"
-sig_timestamp="date -u +$ISOFORMAT"
+sig_timestamp=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
 sig_data="$USER_ID$path$sig_timestamp"
 
-signature=$(echo -n "$sig_data" | openssl dgst -sha1 -hmac "$APIKEY")
+signature_raw=$(echo -n "$sig_data" | openssl dgst -sha1 -hmac "$APIKEY")
+prefix_to_remove="(stdin)= " 
+signature="$(echo ${signature_raw#$prefix_to_remove})" 
 
-echo -H 'userId: $USERID' -H 'signatureTimestamp: $sig_timestamp' -H 'signature: $signature'
+echo -H "userId: $USERID" -H "signatureTimestamp: $sig_timestamp" -H "signature: $signature"
