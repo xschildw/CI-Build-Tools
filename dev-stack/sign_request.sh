@@ -23,7 +23,8 @@ sig_data="$USER_ID$path$sig_timestamp"
 decoded_key=$(echo -n $APIKEY | base64 --decode)
 
 signature_raw=$(echo -n "$sig_data" | iconv -t UTF8 | openssl dgst -sha1 -hmac "$decoded_key")
+echo $signature_raw
 prefix_to_remove="(stdin)= " 
-signature="$(echo -n ${signature_raw#$prefix_to_remove} | base64)" 
+signature="$(echo -n ${signature_raw#$prefix_to_remove} -binary | base64)" 
 
 echo -H \"userId:$USER_ID\" -H \"signatureTimestamp:$sig_timestamp\" -H \"signature:$signature\"
