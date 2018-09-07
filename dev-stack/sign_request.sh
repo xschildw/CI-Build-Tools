@@ -14,6 +14,7 @@ APIKEY=$3
 protocol="$(echo $URL | grep :// | sed -e's,^\(.*://\).*,\1,g')"
 # remove the protocol from url
 url="$(echo ${URL/$protocol/})" 
+# path should start with /repo/v1
 path=/$(echo $url | grep / | cut -d/ -f2-)
 
 sig_timestamp=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
@@ -22,9 +23,6 @@ sig_data="$USER_ID$path$sig_timestamp"
 # echo -n to not include new line character
 decoded_key=$(echo -n $APIKEY | base64 --decode)
 
-signature_raw=$(echo -n "$sig_data" | iconv -t UTF8 | openssl dgst -sha1 -hmac "$decoded_key")
-echo $signature_raw
-prefix_to_remove="(stdin)= " 
-signature="$(echo -n ${signature_raw#$prefix_to_remove} -binary | base64)" 
+signature=$(echo -n "$sig_data" | iconv -t UTF8 | openssl dgst -sha1 -hmac -binary "$decoded_key" | base64)
 
 echo -H \"userId:$USER_ID\" -H \"signatureTimestamp:$sig_timestamp\" -H \"signature:$signature\"
