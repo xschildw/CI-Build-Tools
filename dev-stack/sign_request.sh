@@ -14,7 +14,7 @@ APIKEY=$3
 protocol="$(echo $URL | grep :// | sed -e's,^\(.*://\).*,\1,g')"
 # remove the protocol from url
 url="$(echo ${URL/$protocol/})" 
-path=$(echo $url | grep / | cut -d/ -f2-)
+path=/$(echo $url | grep / | cut -d/ -f2-)
 
 sig_timestamp=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
 sig_data="$USER_ID$path$sig_timestamp"
