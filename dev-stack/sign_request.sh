@@ -11,6 +11,11 @@ URL=$1
 USER_ID=$2
 APIKEY=$3
 
+# Requirements for signing request
+# The provided APIKEY are base64 encoded and must be decoded to sign
+# The data must be utf-8 encoded
+# The signature must be base64 encoded
+
 protocol="$(echo $URL | grep :// | sed -e's,^\(.*://\).*,\1,g')"
 # remove the protocol from url
 url="$(echo ${URL/$protocol/})" 
@@ -23,6 +28,7 @@ sig_data="$USER_ID$path$sig_timestamp"
 # echo -n to not include new line character
 decoded_key=$(echo -n $APIKEY | base64 --decode)
 
-signature=$(echo -n "$sig_data" | iconv -t UTF8 | openssl dgst -sha1 -hmac -binary "$decoded_key" | base64)
+# signature=$(echo -n "$sig_data" | iconv -t UTF8 | openssl dgst -sha1 -hmac "$decoded_key" | base64)
+signature=$(printf $sig_data | openssl dgst -binary -sha1 -hmac "$decoded_key" | od -An -vtx1 | sed 's/[ \n]//g' | sed 'N;s/\n//')
 
 echo -H \"userId:$USER_ID\" -H \"signatureTimestamp:$sig_timestamp\" -H \"signature:$signature\"
