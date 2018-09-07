@@ -13,7 +13,6 @@ APIKEY=$3
 
 # Requirements for signing request
 # The provided APIKEY are base64 encoded and must be decoded to sign
-# The data must be utf-8 encoded
 # The signature must be base64 encoded
 
 protocol="$(echo $URL | grep :// | sed -e's,^\(.*://\).*,\1,g')"
