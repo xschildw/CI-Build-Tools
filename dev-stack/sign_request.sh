@@ -23,4 +23,4 @@ signature_raw=$(echo -n "$sig_data" | openssl dgst -sha1 -hmac "$APIKEY")
 prefix_to_remove="(stdin)= " 
 signature="$(echo ${signature_raw#$prefix_to_remove})" 
 
-echo -H \"userId: $USER_ID\" -H \"signatureTimestamp: $sig_timestamp\" -H \"signature: $signature\"
+echo -H \"userId:$USER_ID\" -H \"signatureTimestamp:$sig_timestamp\" -H \"signature:$signature\"
