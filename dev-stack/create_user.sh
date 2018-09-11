@@ -19,7 +19,7 @@ curl --fail-early $REPO_ENDPOINT/repo/v1/version
 ## Step 2 -- Create a test user
 # POST /admin/user
 url=$REPO_ENDPOINT/repo/v1/admin/user
-data="{\"username\":\"$USERNAME_TO_CREATE\", \"email\":\"$EMAIL_TO_CREATE\", \"password\":\"$PASSWORD_TO_CREATE\"}"
+data="{\"username\":\"$USERNAME_TO_CREATE\", \"email\":\"$EMAIL_TO_CREATE\", \"password\":\"$PASSWORD_TO_CREATE\", \"session\":{\"acceptsTermsOfUse\":true}}"
 signed_headers=$(curl -s https://raw.githubusercontent.com/kimyen/CI-Build-Tools/PLFM-5028/dev-stack/sign_request.sh | bash -s $url $ADMIN_USERNAME $ADMIN_APIKEY)
 new_user=$(echo curl -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" $signed_headers -d \'$data\' \"$url\" | bash)
 prefix="{\"id\":\""
@@ -36,5 +36,5 @@ echo curl -X PUT -H \"Accept:application/json\" -H \"Content-Type:application/js
 # POST /login
 url=$REPO_ENDPOINT/auth/v1/login
 data="{\"username\":\"$USERNAME_TO_CREATE\", \"password\":\"$PASSWORD_TO_CREATE\", \"authenticationReceipt\":\"\"}"
-$(echo curl -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" -d \'$data\' \"$url\" | bash)
+echo curl -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" -d \'$data\' \"$url\" | bash
 
