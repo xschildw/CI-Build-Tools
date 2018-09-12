@@ -30,7 +30,7 @@ id=$(echo $new_user | sed -e "s/^$prefix//" -e "s/$suffix$//")
 # PUT /user/{id}/certificationStatus
 url=$REPO_ENDPOINT/repo/v1/user/$id/certificationStatus?isCertified=True
 signed_headers=$(curl -s https://raw.githubusercontent.com/kimyen/CI-Build-Tools/PLFM-5028/dev-stack/sign_request.sh | bash -s $url $ADMIN_USERNAME $ADMIN_APIKEY)
-echo curl -X PUT -H \"Accept:application/json\" -H \"Content-Type:application/json\" $signed_headers -d \'$data\' \"$url\" | bash
+echo curl -X PUT -H \"Accept:application/json\" -H \"Content-Type:application/json\" $signed_headers \"$url\" | bash
 
 ## Step 4 -- Verified that the new user can login using username and password
 # POST /login
