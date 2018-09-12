@@ -14,7 +14,7 @@
 set -e
 
 ## Step 1 -- Validate that the repo endpoint is reachable
-curl --fail-early $REPO_ENDPOINT/repo/v1/version
+curl $REPO_ENDPOINT/repo/v1/version
 
 ## Step 2 -- Create a test user
 # POST /admin/user
