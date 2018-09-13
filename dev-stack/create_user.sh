@@ -35,6 +35,6 @@ echo curl -X PUT -H \"Accept:application/json\" -H \"Content-Type:application/js
 ## Step 4 -- Verified that the new user can login using username and password
 # POST /login
 url=$REPO_ENDPOINT/auth/v1/login
-data="{\"username\":\"$USERNAME_TO_CREATE\", \"password\":\"$PASSWORD_TO_CREATE\", \"authenticationReceipt\":\"\"}"
+data="{\"username\":\"$USERNAME_TO_CREATE\", \"password\":\"$PASSWORD_TO_CREATE\"}"
 echo curl -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" -d \'$data\' \"$url\" | bash
 
