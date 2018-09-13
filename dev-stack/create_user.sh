@@ -20,8 +20,6 @@ curl $REPO_ENDPOINT/repo/v1/version
 # POST /admin/user
 url=$REPO_ENDPOINT/repo/v1/admin/user
 data="{\"username\":\"$USERNAME_TO_CREATE\", \"email\":\"$EMAIL_TO_CREATE\", \"password\":\"$PASSWORD_TO_CREATE\", \"session\":{\"acceptsTermsOfUse\":true}}"
-# debug signed_headers.sh
-curl -s https://raw.githubusercontent.com/kimyen/CI-Build-Tools/PLFM-5028/dev-stack/sign_request.sh | bash -s $url $ADMIN_USERNAME $ADMIN_APIKEY
 signed_headers=$(curl -s https://raw.githubusercontent.com/kimyen/CI-Build-Tools/PLFM-5028/dev-stack/sign_request.sh | bash -s $url $ADMIN_USERNAME $ADMIN_APIKEY)
 new_user=$(echo curl -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" $signed_headers -d \'$data\' \"$url\" | bash)
 prefix="{\"id\":\""
