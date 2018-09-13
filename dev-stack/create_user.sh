@@ -23,9 +23,7 @@ echo "Create a test user"
 url=$REPO_ENDPOINT/repo/v1/admin/user
 data="{\"username\":\"$USERNAME_TO_CREATE\", \"email\":\"$EMAIL_TO_CREATE\", \"password\":\"$PASSWORD_TO_CREATE\", \"session\":{\"acceptsTermsOfUse\":true}}"
 signed_headers=$(curl -s https://raw.githubusercontent.com/kimyen/CI-Build-Tools/PLFM-5028/dev-stack/sign_request.sh | bash -s $url $ADMIN_USERNAME $ADMIN_APIKEY)
-echo $signed_headers
 new_user=$(echo curl -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" $signed_headers -d \'$data\' \"$url\" | bash)
-echo $new_user
 prefix="{\"id\":\""
 suffix="\"}"
 id=$(echo $new_user | sed -e "s/^$prefix//" -e "s/$suffix$//")
@@ -36,7 +34,6 @@ echo "Created user with ID: $id"
 echo "Add the test user to Certified user group"
 url=$REPO_ENDPOINT/repo/v1/user/$id/certificationStatus?isCertified=True
 signed_headers=$(curl -s https://raw.githubusercontent.com/kimyen/CI-Build-Tools/PLFM-5028/dev-stack/sign_request.sh | bash -s $url $ADMIN_USERNAME $ADMIN_APIKEY)
-echo curl -X PUT -H \"Accept:application/json\" -H \"Content-Type:application/json\" $signed_headers \"$url\"
 echo curl -X PUT -H \"Accept:application/json\" -H \"Content-Type:application/json\" $signed_headers \"$url\" | bash
 
 ## Step 4 -- Verified that the new user can login using username and password
