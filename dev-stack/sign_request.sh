@@ -26,8 +26,12 @@ path="$(echo $path | sed -e's,^\(.*\)\?.*,\1,g')"
 sig_timestamp=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
 sig_data="$USER_ID$path$sig_timestamp"
 
+echo "decoding key ..."
+
 # echo -n to not include new line character
 decoded_key=$(echo -n $APIKEY | base64 --decode)
+
+echo "generating signature ..."
 
 signature=$(echo -n $sig_data | openssl dgst -binary -sha1 -hmac "$decoded_key" | base64)
 
