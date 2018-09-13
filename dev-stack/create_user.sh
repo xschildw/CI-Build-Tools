@@ -23,6 +23,7 @@ echo "Create a test user"
 url=$REPO_ENDPOINT/repo/v1/admin/user
 data="{\"username\":\"$USERNAME_TO_CREATE\", \"email\":\"$EMAIL_TO_CREATE\", \"password\":\"$PASSWORD_TO_CREATE\", \"session\":{\"acceptsTermsOfUse\":true}}"
 signed_headers=$(curl -s https://raw.githubusercontent.com/kimyen/CI-Build-Tools/PLFM-5028/dev-stack/sign_request.sh | bash -s $url $ADMIN_USERNAME $ADMIN_APIKEY)
+echo $signed_headers
 new_user=$(echo curl -X POST -H \"Accept:application/json\" -H \"Content-Type:application/json\" $signed_headers -d \'$data\' \"$url\" | bash)
 echo $new_user
 prefix="{\"id\":\""
