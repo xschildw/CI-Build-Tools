@@ -3,7 +3,7 @@
 ##
 
 ## Positional parameters:
-## URL -- the URL to preform curl
+## URL -- the URL to preform curl without the query parameters
 ## USER_ID -- the user who is making the request
 ## APIKEY -- the apiKey used to sign request
 
@@ -20,8 +20,6 @@ protocol="$(echo $URL | grep :// | sed -e's,^\(.*://\).*,\1,g')"
 url="$(echo ${URL/$protocol/})" 
 # path should start with /repo/v1
 path="/$(echo $url | grep / | cut -d/ -f2-)"
-# remove query parameters
-path="$(echo $path | sed -e's,^\(.*\)\?.*,\1,g')"
 
 sig_timestamp=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
 sig_data="$USER_ID$path$sig_timestamp"
