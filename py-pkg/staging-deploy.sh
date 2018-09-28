@@ -1,4 +1,4 @@
-# This script, when run from Jenkins, updates the docs and releases the python package to test.pypi.org.
+# This script, when run from Jenkins, releases the python package to test.pypi.org.
 
 # Parameters
 # GITHUB_USERNAME -- The Github user who is running this build
@@ -34,18 +34,11 @@ git config user.email "${EMAIL}"
 export VERSION=`echo $(echo ${GIT_BRANCH}.$BUILD_NUMBER | sed 's/origin\/v//g; s/-rc//g')`
 git checkout ${GIT_BRANCH}
 
-# generate docs
-cd docs
-make html
-cd ..
-
-# update docs
-git add --all
-git commit -m "update docs"
-git push origin --all
-
 # update version
-sed -i "/\"latestVersion\":/c\  \"latestVersion\":\"$VERSION\"," synapseclient/synapsePythonClient
+sed "s|\"latestVersion\":.*$|\"latestVersion\":\"$VERSION\",|g" synapseClient/synapsePythonClient > temp
+rm synapseClient/synapsePythonClient
+mv temp synapseClient/synapsePythonClient
+python3 setup.py install
 
 # create distribution
 python3 setup.py sdist
