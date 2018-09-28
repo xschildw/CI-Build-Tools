@@ -28,12 +28,11 @@ echo password:$TESTPYPI_PASSWORD >> ~/.pypirc
 git clone https://github.com/${GITHUB_ACCOUNT}/${REPO_NAME}.git
 
 cd ${REPO_NAME}
-
 git config user.name "${GITHUB_USERNAME}"
 git config user.email "${EMAIL}"
 
 export VERSION=`echo $(echo ${GIT_BRANCH}.$BUILD_NUMBER | sed 's/origin\/v//g; s/-rc//g')`
-git checkout origin/${GIT_BRANCH}
+git checkout ${GIT_BRANCH}
 
 # generate docs
 cd docs
@@ -57,5 +56,4 @@ twine upload --repository testpypi dist/*
 # clean up
 cd ..
 rm -rf ${REPO_NAME}
-
 
