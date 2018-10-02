@@ -105,6 +105,8 @@ pkgdown::build_site(document = FALSE, mathjax = FALSE, lazy = TRUE, preview = FA
 ## clean up the temporary R library dir
 rm -rf ../RLIB
 
+# keep CNAME settings
+git update-index --assume-unchanged docs/CNAME
 git add --all
 git commit -m "Version $VERSION is succesfully built on $DATE"
 git push upstream ${BRANCH}
