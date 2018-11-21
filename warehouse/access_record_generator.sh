@@ -32,7 +32,6 @@ data=",\"3\",\"$timestamp\",,\"10.21.72.88\",\"49\",\"ELB-HealthChecker/2.0\",,\
 # write to a file
 # 00-00-04-577-5f257193-49a8-45e7-9691-c85eeabda814-rolling.csv
 file_name=$hours-$uuid-rolling.csv
-touch $file_name
 echo $data > $file_name
 
 # zip the file
