@@ -50,4 +50,3 @@ twine upload --repository testpypi dist/*
 # clean up
 cd ..
 rm -rf ${REPO_NAME}
-
