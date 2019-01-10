@@ -20,7 +20,7 @@ echo [distutils] > ~/.pypirc
 echo index-servers=testpypi >> ~/.pypirc
 echo >> ~/.pypirc
 echo [testpypi] >> ~/.pypirc
-echo repository: https://test.pypi.org/ >> ~/.pypirc
+echo repository: https://test.pypi.org/legacy/ >> ~/.pypirc
 echo username:$TESTPYPI_USERNAME >> ~/.pypirc
 echo password:$TESTPYPI_PASSWORD >> ~/.pypirc
 
