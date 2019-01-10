@@ -36,9 +36,9 @@ export VERSION=${GIT_BRANCH}
 git checkout ${GIT_BRANCH}
 
 # update version
-sed "s|\"latestVersion\":.*$|\"latestVersion\":\"$VERSION\",|g" synapseClient/synapsePythonClient > temp
-rm synapseClient/synapsePythonClient
-mv temp synapseClient/synapsePythonClient
+sed "s|\"latestVersion\":.*$|\"latestVersion\":\"$VERSION\",|g" synapseclient/synapsePythonClient > temp
+rm synapseclient/synapsePythonClient
+mv temp synapseclient/synapsePythonClient
 python3 setup.py install
 
 # create distribution
