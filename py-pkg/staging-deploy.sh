@@ -31,8 +31,7 @@ cd ${REPO_NAME}
 git config user.name "${GITHUB_USERNAME}"
 git config user.email "${EMAIL}"
 
-# export VERSION=`echo $(echo ${GIT_BRANCH}.$BUILD_NUMBER | sed 's/origin\/v//g; s/-rc//g')`
-export VERSION=${GIT_BRANCH}
+export VERSION=`echo $(echo ${GIT_BRANCH}.$BUILD_NUMBER | sed 's/origin\/v//g; s/-rc//g')`
 git checkout ${GIT_BRANCH}
 
 # update version
