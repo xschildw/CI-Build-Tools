@@ -20,7 +20,7 @@ echo [distutils] > ~/.pypirc
 echo index-servers=testpypi >> ~/.pypirc
 echo >> ~/.pypirc
 echo [testpypi] >> ~/.pypirc
-echo repository: https://test.pypi.org/legacy >> ~/.pypirc
+echo repository: https://test.pypi.org/legacy/ >> ~/.pypirc
 echo username:$TESTPYPI_USERNAME >> ~/.pypirc
 echo password:$TESTPYPI_PASSWORD >> ~/.pypirc
 
@@ -31,14 +31,13 @@ cd ${REPO_NAME}
 git config user.name "${GITHUB_USERNAME}"
 git config user.email "${EMAIL}"
 
-# export VERSION=`echo $(echo ${GIT_BRANCH}.$BUILD_NUMBER | sed 's/origin\/v//g; s/-rc//g')`
-export VERSION=${GIT_BRANCH}
+export VERSION=`echo $(echo ${GIT_BRANCH}.$BUILD_NUMBER | sed 's/origin\/v//g; s/-rc//g')`
 git checkout ${GIT_BRANCH}
 
 # update version
-sed "s|\"latestVersion\":.*$|\"latestVersion\":\"$VERSION\",|g" synapseClient/synapsePythonClient > temp
-rm synapseClient/synapsePythonClient
-mv temp synapseClient/synapsePythonClient
+sed "s|\"latestVersion\":.*$|\"latestVersion\":\"$VERSION\",|g" synapseclient/synapsePythonClient > temp
+rm synapseclient/synapsePythonClient
+mv temp synapseclient/synapsePythonClient
 python3 setup.py install
 
 # create distribution
