@@ -38,6 +38,11 @@ git checkout ${GIT_BRANCH}
 sed "s|\"latestVersion\":.*$|\"latestVersion\":\"$VERSION\",|g" synapseclient/synapsePythonClient > temp
 rm synapseclient/synapsePythonClient
 mv temp synapseclient/synapsePythonClient
+
+# ensure environment
+python3 -m pip install twine==1.11.0 setuptools==38.6.0
+
+# install synapseclient
 python3 setup.py install
 
 # create distribution
