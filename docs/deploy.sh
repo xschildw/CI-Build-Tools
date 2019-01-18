@@ -26,5 +26,3 @@ s3_website push
 # clean up
 cd ..
 rm -rf ${REPO_NAME}
-
-
