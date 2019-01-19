@@ -10,6 +10,7 @@
 # PYPI_REPO -- Either test.pypi.org or pypi.org
 # PYPI_USERNAME -- The PYPI_REPO user
 # PYPI_PASSWORD -- The PYPI_REPO user's password
+# EXTENDED_VERSION_NUMBER -- Either `.$BUILD_NUMBER` for staging or leave out for prod
 
 # remove the last build clone
 set +e
@@ -32,7 +33,7 @@ cd ${REPO_NAME}
 git config user.name "${GITHUB_USERNAME}"
 git config user.email "${EMAIL}"
 
-export VERSION=`echo $(echo ${GIT_BRANCH}.$BUILD_NUMBER | sed 's/origin\/v//g; s/-rc//g')`
+export VERSION=`echo $(echo ${GIT_BRANCH}${EXTENDED_VERSION_NUMBER} | sed 's/v//g; s/-rc//g')`
 git checkout ${GIT_BRANCH}
 
 # update version
