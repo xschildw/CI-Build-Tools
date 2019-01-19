@@ -7,7 +7,8 @@
 # EMAIL -- The email of the user in GITHUB_USERNAME
 # REPO_NAME -- The Github repo to get the Python code from
 # GIT_BRANCH -- The release candidate branch
-# PYPI_REPO -- Either test.pypi.org or pypi.org
+# PYPI_NAME -- Either testpypi or pypi
+# PYPI_REPO -- Either https://test.pypi.org/legacy or https://upload.pypi.org/legacy/
 # PYPI_USERNAME -- The PYPI_REPO user
 # PYPI_PASSWORD -- The PYPI_REPO user's password
 # EXTENDED_VERSION_NUMBER -- Either `.$BUILD_NUMBER` for staging or leave out for prod
@@ -19,10 +20,10 @@ set -e
 
 # create .pypirc file
 echo [distutils] > ~/.pypirc
-echo index-servers=PYPI >> ~/.pypirc
+echo index-servers=$PYPI_NAME >> ~/.pypirc
 echo >> ~/.pypirc
-echo [PYPI] >> ~/.pypirc
-echo repository: https://$PYPI_REPO/legacy/ >> ~/.pypirc
+echo [$PYPI_NAME] >> ~/.pypirc
+echo repository: $PYPI_REPO >> ~/.pypirc
 echo username:$PYPI_USERNAME >> ~/.pypirc
 echo password:$PYPI_PASSWORD >> ~/.pypirc
 
@@ -50,8 +51,8 @@ python3 setup.py install
 # create distribution
 python3 setup.py sdist
 
-# upload to PYPI 
-twine upload --repository PYPI dist/*
+# upload to PYPI_REPO
+twine upload --repository $PYPI_NAME dist/*
 
 # clean up
 cd ..
