@@ -78,7 +78,7 @@ R CMD INSTALL ./ --library=../RLIB
 # store the login credentials
 echo "[authentication]" > orig.synapseConfig
 echo "username=${SYN_USERNAME}" >> orig.synapseConfig
-echo "apiKey=${SYN_APIKEY}" >> orig.synapseConfig
+echo "password=${SYN_PASSWORD}" >> orig.synapseConfig
 # store synapse base endpoint
 echo "[endpoints]" >> orig.synapseConfig
 echo "repoEndpoint=${SYNAPSE_BASE_ENDPOINT}/repo/v1" >> orig.synapseConfig
