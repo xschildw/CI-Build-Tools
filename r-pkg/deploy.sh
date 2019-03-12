@@ -65,7 +65,7 @@ done
 
 # upload
 cd ${S3_RAN}
-aws s3 . sync s3://${S3_RAN}/
+aws s3 sync . s3://${S3_RAN}/
 cd ..
 
 # clean up
