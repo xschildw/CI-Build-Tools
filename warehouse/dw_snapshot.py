@@ -44,9 +44,7 @@ import time
 #
 
 def get_rds_client():
-    # return boto3.client('rds')
-    # for local testing
-    return boto3.Session(profile_name='kimdw').client('rds')
+    return boto3.client('rds')
 
 
 def grant_access(endpoint, master_username, master_password, username, password):
