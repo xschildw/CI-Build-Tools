@@ -27,10 +27,13 @@ from botocore.exceptions import ClientError
 #
 #
 
+REGION_NAME = "us-east-1"
+
 
 def launch_and_grant_access_to_snapshot(warehouse_instance, subnet_group, new_instance_name,
  user_email, project, secret_name, username, password):
-    rds = get_rds_client()
+    
+    rds = get_rds_client(REGION_NAME)
     snapshot = launch_snapshot(
         rds,
         warehouse_instance, 
@@ -45,8 +48,7 @@ def launch_and_grant_access_to_snapshot(warehouse_instance, subnet_group, new_in
     )
     print("A snapshot is launched and available at {}.".format(endpoint))
 
-    region_name = "us-east-1"
-    master_username, master_password, db_name = get_secret(secret_name, region_name)
+    master_username, master_password, db_name = get_secret(secret_name, REGION_NAME)
     grant_access(
         endpoint,
         master_username,
@@ -106,8 +108,11 @@ def get_secret(secret_name, region_name):
             print(base64.b64decode(get_secret_value_response['SecretBinary']))
 
 
-def get_rds_client():
-    return boto3.client('rds')
+def get_rds_client(region_name):
+    return boto3.client(
+        service_name='rds',
+        region_name=region_name
+    )
 
 
 def grant_access(endpoint, master_username, master_password, db_name, username, password):
@@ -141,7 +146,7 @@ def get_endpoint(rds, db_id):
 
 
 def shutdown_snapshot(db_id):
-    rds = get_rds_client()
+    rds = get_rds_client(REGION_NAME)
     rds.delete_db_instance(
         DBInstanceIdentifier=db_id,
         SkipFinalSnapshot=True
