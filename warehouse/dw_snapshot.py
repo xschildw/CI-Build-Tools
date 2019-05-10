@@ -13,6 +13,7 @@ from botocore.exceptions import ClientError
 #     dw_snapshot.launch_and_grant_access_to_snapshot(
 #         'pw15yb22o9ndju5',
 #         'prod-datawarehouse-db-dbsubnetgroup-1t9z88xhk4qlh',
+#         'warehouse',
 #         'test',
 #         'kimyen.ladia@sagebase.org',
 #         'WW-70',
@@ -30,7 +31,7 @@ from botocore.exceptions import ClientError
 REGION_NAME = "us-east-1"
 
 
-def launch_and_grant_access_to_snapshot(warehouse_instance, subnet_group, new_instance_name,
+def launch_and_grant_access_to_snapshot(warehouse_instance, subnet_group, db_name, new_instance_name,
  user_email, project, secret_name, username, password):
     
     rds = get_rds_client(REGION_NAME)
@@ -48,7 +49,7 @@ def launch_and_grant_access_to_snapshot(warehouse_instance, subnet_group, new_in
     )
     print("A snapshot is launched and available at {}.".format(endpoint))
 
-    master_username, master_password, db_name = get_secret(secret_name, REGION_NAME)
+    master_username, master_password = get_secret(secret_name, REGION_NAME)
     grant_access(
         endpoint,
         master_username,
@@ -103,7 +104,7 @@ def get_secret(secret_name, region_name):
         # Depending on whether the secret is a string or binary, one of these fields will be populated.
         if 'SecretString' in get_secret_value_response:
             creds = json.loads(get_secret_value_response['SecretString'])
-            return creds['username'], creds['password'], creds['dbname']
+            return creds['username'], creds['password']
         else:
             print(base64.b64decode(get_secret_value_response['SecretBinary']))
 
