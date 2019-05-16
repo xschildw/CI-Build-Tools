@@ -13,6 +13,7 @@ if [[ $label = $WINDOWS_LABEL_PREFIX* ]]
 then
   oldPath=$PATH
   RVERS=$(R --version | head -1 | awk '{print $3}')
+  echo $RVERS
   ## build x64 version
   PATH=C:\\Program\ Files\\R\\$RVERS\\bin\\x64
   R --vanilla < test.R
