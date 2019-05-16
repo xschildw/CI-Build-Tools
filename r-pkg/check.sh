@@ -9,7 +9,7 @@ echo "try(remove.packages('$PACKAGE'), silent=T)" >> test.R
 echo "install.packages('$PACKAGE', repos=c('$RAN', 'http://cran.fhcrc.org'))" >> test.R
 echo "library('$PACKAGE')" >> test.R
 
-if [[[ $label = $WINDOWS_LABEL_PREFIX* ]]
+if [[ $label = $WINDOWS_LABEL_PREFIX* ]]
 then
   oldPath=$PATH
   
