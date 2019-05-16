@@ -1,5 +1,14 @@
 ## This build checking package $PACKAGE version $VERSION_TO_CHECK is downloadable from $RAN
 ## and installable to multiple platforms.
+##
+## Parameters
+##
+## RAN -- http://staging-ran.synapse.org / http://ran.synapse.org
+## PACKAGE -- PythonEmbedInR / synapser / synapserutils
+## VERSION_TO_CHECK -- 0.3.34
+## WINDOWS_LABEL_PREFIX -- window
+## RVERS -- for Windows
+##
 
 # fail early
 set -e
@@ -12,7 +21,6 @@ echo "library('$PACKAGE')" >> test.R
 if [[ $label = $WINDOWS_LABEL_PREFIX* ]]
 then
   oldPath=$PATH
-  RVERS=$(R --version | head -1 | awk '{print $3}')
   ## build x64 version
   PATH=C:\\Program\ Files\\R\\$RVERS\\bin\\x64
   R --vanilla < test.R
