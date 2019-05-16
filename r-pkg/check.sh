@@ -12,7 +12,7 @@ echo "library('$PACKAGE')" >> test.R
 if [[ $label = $WINDOWS_LABEL_PREFIX* ]]
 then
   oldPath=$PATH
-  RVERS=$(echo $label | awk -F[-] '{print $3}')
+  RVERS=$(R --version | head -1 | awk '{print $3}')
   ## build x64 version
   PATH=C:\\Program\ Files\\R\\$RVERS\\bin\\x64
   R --vanilla < test.R
