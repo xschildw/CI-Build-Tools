@@ -21,7 +21,7 @@ cd ${S3_RAN}
 aws s3 sync s3://${S3_RAN}/ .
 cd ..
 
-curl -o deploy.R https://raw.githubusercontent.com/kimyen/CI-Build-Tools/WW-70/r-pkg/deploy.R
+curl -o deploy.R https://raw.githubusercontent.com/Sage-Bionetworks/CI-Build-Tools/master/r-pkg/deploy.R
 
 R -e "source('$home/deploy.R');\
 jenkins_deploy('$home/$S3_RAN', '$ARTIFACTS_DIR')"
