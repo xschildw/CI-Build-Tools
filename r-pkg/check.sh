@@ -4,7 +4,7 @@
 # fail early
 set -e
 
-echo "if (available.packages(repos='$RAN')['$PACKAGE','Version'] != '$VERSION_TO_CHECK') { quit(1) }" > test.R
+echo "if (available.packages(repos='$RAN')['$PACKAGE','Version'] != '$VERSION_TO_CHECK') { quit(save = 'no', status = 1) }" > test.R
 echo "try(remove.packages('$PACKAGE'), silent=T)" >> test.R
 echo "install.packages('$PACKAGE', repos=c('$RAN', 'http://cran.fhcrc.org'))" >> test.R
 echo "library('$PACKAGE')" >> test.R
