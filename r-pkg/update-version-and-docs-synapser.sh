@@ -63,7 +63,7 @@ rm -rf ../RLIB
 set -e
 mkdir -p ../RLIB
 
-R -e ".libPaths('../RLIB');\
+R -e ".libPaths(c('../RLIB', .libPaths()));\
 install.packages(c('fs', 'pack', 'R6', 'testthat', 'knitr', 'rmarkdown', 'PythonEmbedInR', 'pkgdown'),\
  repos=c('http://cran.fhcrc.org', '${RAN}'))"
 
@@ -96,7 +96,7 @@ set +e
 rm -rf docs/
 set -e
 
-R -e ".libPaths('../RLIB');\
+R -e ".libPaths(c('../RLIB', .libPaths()));\
 library(rmarkdown);\
 if (pandoc_available())\
   cat('pandoc', as.character(pandoc_version()), 'is available.');\
