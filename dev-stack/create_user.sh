@@ -30,7 +30,7 @@ id=$(echo $new_user | sed -e "s/^$prefix//" -e "s/$suffix$//")
 echo "Created user with ID: $id"
 
 ## Step 3 -- Add the test user to Certified user group
-# PUT /user/{id}/certificationStatus
+# PUT admin/user/{id}/certificationStatus
 echo "Add the test user to Certified user group"
 url=$REPO_ENDPOINT/repo/v1/admin/user/$id/certificationStatus
 signed_headers=$(curl -s https://raw.githubusercontent.com/kimyen/CI-Build-Tools/PLFM-5028/dev-stack/sign_request.sh | bash -s $url $ADMIN_USERNAME $ADMIN_APIKEY)
