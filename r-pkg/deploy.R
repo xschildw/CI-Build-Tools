@@ -46,7 +46,7 @@ deploy_artifact <- function(artifact_file,
         contribUrlType <- 'source'
     } else if (endsWith(tolower(artifact_file), MAC_SUFFIX)) {
         writePackagesType <- 'mac.binary'
-        contribUrlType <- 'mac.binary.el-capitan'
+        contribUrlType <- if (startsWith(rversion, '4')) 'mac.binary' else 'mac.binary.el-capitan'
     } else if (endsWith(tolower(artifact_file), WINDOWS_SUFFIX)) {
         writePackagesType <- 'win.binary'
         contribUrlType <- 'win.binary'
