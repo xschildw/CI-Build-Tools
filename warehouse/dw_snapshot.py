@@ -163,7 +163,7 @@ def launch_snapshot(rds, db_id, subnet_group, instance_name, owner_email, projec
         DBSnapshotIdentifier=latest['DBSnapshotIdentifier'],
         DBSubnetGroupName=subnet_group,
         PubliclyAccessible=False,
-        AutoMinorVersionUpgrade=False,
+        AutoMinorVersionUpgrade=True,
         Tags=[
             {'Key':'OwnerEmail', 'Value':owner_email},
             {'Key':'Project', 'Value':project}
