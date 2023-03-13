@@ -210,10 +210,13 @@ def get_expired_instances_ids(instances):
         for tag in tag_list:
             if 'ExpirationDate' == tag['Key']:
                 exp_date_iso = tag['Value']
-                exp_date = datetime.date.fromisoformat(exp_date_iso)
-                if cur_date > exp_date:
-                    exp_instance_ids.append(instance_id)
-                break
+                if 'none' == exp_date_iso:
+                    break
+                else:
+                    exp_date = datetime.date.fromisoformat(exp_date_iso)
+                    if cur_date > exp_date:
+                        exp_instance_ids.append(instance_id)
+                    break
     return exp_instance_ids
 
 

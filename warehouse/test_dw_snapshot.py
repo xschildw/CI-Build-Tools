@@ -4,7 +4,7 @@ import dw_snapshot
 import os
 
 
-class MyTestCase(TestCase):
+class UnitTestCase(TestCase):
 
     def test_get_expiration_date_iso_default(self):
         curdate = datetime.date.today()
@@ -84,6 +84,40 @@ class MyTestCase(TestCase):
         instances = [instance]
         expired_ids = dw_snapshot.get_expired_instances_ids(instances)
         self.assertEqual([], expired_ids)
+
+    def test_get_expired_instances_ids_none_expiredtag(self):
+        instance = dict()
+        instance['DBInstanceIdentifier'] = 'dbIdentifier'
+        # expiration date is 'none'
+        instance['TagList'] = [
+            {'Key': 'OwnerEmail', 'Value':'owner@sagebase.org'},
+            {'Key': 'Project', 'Value':'proj'},
+            {'Key': 'ExpirationDate', 'Value': 'none'}]
+        instances = [instance]
+        expired_ids = dw_snapshot.get_expired_instances_ids(instances)
+        self.assertEqual([], expired_ids)
+
+    def test_get_expired_instances_ids_mixed(self):
+        instance1 = dict()
+        instance1['DBInstanceIdentifier'] = 'dbIdentifier1'
+        # expiration date is 'none'
+        instance1['TagList'] = [
+            {'Key': 'OwnerEmail', 'Value':'owner@sagebase.org'},
+            {'Key': 'Project', 'Value':'proj'},
+            {'Key': 'ExpirationDate', 'Value': 'none'}]
+        instance2 = dict()
+        instance2['DBInstanceIdentifier'] = 'dbIdentifier2'
+        # expired yesterday
+        exp_date_iso = (datetime.date.today() + datetime.timedelta(days=-1)).isoformat()
+        instance2['TagList'] = [
+            {'Key': 'OwnerEmail', 'Value':'owner@sagebase.org'},
+            {'Key': 'Project', 'Value':'proj'},
+            {'Key': 'ExpirationDate', 'Value': exp_date_iso}]
+
+        instances = [instance1, instance2]
+        expired_ids = dw_snapshot.get_expired_instances_ids(instances)
+        self.assertEqual(['dbIdentifier2'], expired_ids)
+
 
     def test_iso(self):
         date1 = datetime.date.today()
