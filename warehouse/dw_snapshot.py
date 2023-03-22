@@ -2,6 +2,8 @@ import boto3
 import time
 import base64
 import json
+import os
+import datetime
 import pymysql.cursors
 from botocore.exceptions import ClientError
 
@@ -29,19 +31,21 @@ from botocore.exceptions import ClientError
 #
 
 REGION_NAME = "us-east-1"
+DEFAULT_DW_TTL_DAYS = 21
 
 
 def launch_and_grant_access_to_snapshot(warehouse_instance, subnet_group, db_name, new_instance_name,
- user_email, project, secret_name, username, password):
-    
+                                        user_email, project, secret_name, username, password):
+    expiration_date_iso = get_expiration_date_iso(datetime.date.today())
     rds = get_rds_client(REGION_NAME)
     snapshot = launch_snapshot(
         rds,
-        warehouse_instance, 
+        warehouse_instance,
         subnet_group,
         new_instance_name,
         user_email,
-        project
+        project,
+        expiration_date_iso
     )
     endpoint = get_endpoint(
         rds,
@@ -62,7 +66,6 @@ def launch_and_grant_access_to_snapshot(warehouse_instance, subnet_group, db_nam
 
 
 def get_secret(secret_name, region_name):
-
     # Create a Secrets Manager client
     session = boto3.session.Session()
     client = session.client(
@@ -151,13 +154,12 @@ def shutdown_snapshot(db_id):
     rds.delete_db_instance(
         DBInstanceIdentifier=db_id,
         SkipFinalSnapshot=True
-        )
+    )
 
 
-def launch_snapshot(rds, db_id, subnet_group, instance_name, owner_email, project):
-
+def launch_snapshot(rds, db_id, subnet_group, instance_name, owner_email, project, expiration_date_iso):
     latest = get_latest_snapshot(rds, db_id)
-    
+
     return rds.restore_db_instance_from_db_snapshot(
         DBInstanceIdentifier=instance_name,
         DBSnapshotIdentifier=latest['DBSnapshotIdentifier'],
@@ -165,14 +167,14 @@ def launch_snapshot(rds, db_id, subnet_group, instance_name, owner_email, projec
         PubliclyAccessible=False,
         AutoMinorVersionUpgrade=True,
         Tags=[
-            {'Key':'OwnerEmail', 'Value':owner_email},
-            {'Key':'Project', 'Value':project}
+            {'Key': 'OwnerEmail', 'Value': owner_email},
+            {'Key': 'Project', 'Value': project},
+            {'Key': 'ExpirationDate', 'Value': expiration_date_iso}
         ]
     )
 
 
 def get_latest_snapshot(rds, db_id):
-
     response = rds.describe_db_snapshots(
         DBInstanceIdentifier=db_id
     )
@@ -189,4 +191,54 @@ def get_latest_snapshot(rds, db_id):
 
     return latest
 
-    
+
+def get_rds_instances():
+    rds = get_rds_client(REGION_NAME)
+    resp = rds.describe_db_instances()
+    instances = resp['DBInstances']
+    return instances
+
+
+# Get RDS instances that are tagged with ExpirationDate and where that date is passed
+def get_expired_instances_ids(instances):
+    cur_date = datetime.date.today()
+    exp_instance_ids = []
+    for instance in instances:
+        instance_id = instance['DBInstanceIdentifier']
+        tag_list = instance['TagList']
+        # is there an ExpirationDate tag
+        for tag in tag_list:
+            if 'ExpirationDate' == tag['Key']:
+                exp_date_iso = tag['Value']
+                if 'none' == exp_date_iso:
+                    break
+                else:
+                    exp_date = datetime.date.fromisoformat(exp_date_iso)
+                    if cur_date > exp_date:
+                        exp_instance_ids.append(instance_id)
+                    break
+    return exp_instance_ids
+
+
+# Return a string
+#   'None' if no expiration time
+#   'ActualExpirationDate' == now() + DW_TTL_DAYS if defined
+def get_expiration_date_iso(d):
+    ttl = os.environ.get('DW_TTL_DAYS')
+    if ttl is None:
+        ttl_days = DEFAULT_DW_TTL_DAYS
+    else:
+        ttl_days = int(ttl)
+    if ttl_days == 0:
+        exp_date = 'none'
+    else:
+        exp_date = (d + datetime.timedelta(days=ttl_days)).isoformat()
+    return exp_date
+
+
+def shutdown_expired_instances():
+    instances = get_rds_instances()
+    expired_ids = get_expired_instances_ids(instances)
+    for expired_id in expired_ids:
+        shutdown_snapshot(expired_id)
+
