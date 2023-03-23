@@ -240,5 +240,5 @@ def shutdown_expired_instances():
     instances = get_rds_instances()
     expired_ids = get_expired_instances_ids(instances)
     for expired_id in expired_ids:
-        shutdown_snapshot(expired_id)
+        print(f'Deleting RDS instance {expired_id}')
 
